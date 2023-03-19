@@ -6,7 +6,6 @@ import {
 } from "../constants/actionTypes";
 
 const reducer = (state = {}, action) => {
-  console.log("profile reducer", action)
   switch (action.type) {
     case PROFILE_PAGE_LOADED:
       return {
