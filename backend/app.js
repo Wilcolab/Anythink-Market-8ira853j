@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("newrelic");
+require('newrelic');
 var http = require("http"),
   path = require("path"),
   methods = require("methods"),
@@ -31,7 +31,7 @@ app.use(
     secret: "secret",
     cookie: { maxAge: 60000 },
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false
   })
 );
 
@@ -69,22 +69,22 @@ app.use(function (req, res, next) {
 });
 
 /// error handler
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   console.log(err.stack);
   if (isProduction) {
-    res.sendStatus(err.status || 500);
+    res.sendStatus(err.status || 500)
   } else {
     res.status(err.status || 500);
     res.json({
       errors: {
         message: err.message,
-        error: err,
-      },
+        error: err
+      }
     });
   }
 });
 
 // finally, let's start our server...
-var server = app.listen(process.env.PORT || 3000, function () {
+var server = app.listen(process.env.PORT || 3000, function() {
   console.log("Listening on port " + server.address().port);
 });
