@@ -10,6 +10,8 @@ services:
       - PORT=3000
       - MONGODB_URI=mongodb://mongodb-node:27017/anythink-market
       - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
     working_dir: /usr/src
     volumes:
       - ./:/usr/src/
@@ -18,6 +20,7 @@ services:
       - "3000:3000"
     depends_on:
       - "mongodb-node"
+      - "cache"
 
   anythink-frontend-react:
     build: ./frontend
@@ -57,3 +60,17 @@ services:
       - ./:/usr/src/
     depends_on:
       - "anythink-frontend-react" 
+  
+  cache:
+    container_name: cache
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - cache:/data
+      
+volumes:
+  cache:
+    driver: local
