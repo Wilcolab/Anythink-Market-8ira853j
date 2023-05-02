@@ -15,4 +15,5 @@ const initRedis = async () => {
 
 module.exports = {
   initRedis,
+  client,
 };
