@@ -184,7 +184,7 @@ router.get("/:itemId", auth.optional, async function (req, res, next) {
 
   const user = await User.findById(req.payload.id);
   const result = item.toJSONFor(user);
-  client.set(itemId, JSON.stringify(result));
+  client.set(itemId, JSON.stringify(result), "EX", 60);
   return res.json({ item: result });
 });
 
@@ -211,6 +211,7 @@ router.put("/:item", auth.required, function (req, res, next) {
       req.item
         .save()
         .then(function (item) {
+          client.del(item.slug);
           return res.json({ item: item.toJSONFor(user) });
         })
         .catch(next);
@@ -230,6 +231,7 @@ router.delete("/:item", auth.required, function (req, res, next) {
 
       if (req.item.seller._id.toString() === req.payload.id.toString()) {
         return req.item.remove().then(function () {
+          client.del(req.item.slug);
           return res.sendStatus(204);
         });
       } else {
