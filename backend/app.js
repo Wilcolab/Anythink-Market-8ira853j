@@ -10,7 +10,22 @@ var http = require("http"),
   errorhandler = require("errorhandler"),
   mongoose = require("mongoose");
 
+const { client, v1 } =require('@datadog/datadog-api-client');
+
 var isProduction = process.env.NODE_ENV === "production";
+
+const initDataDog = () => {
+  const configuration = client.createConfiguration();
+  const apiInstance = new v1.MonitorsApi(configuration);
+  let params = {
+    // number | The ID of the monitor
+    monitorId: 1,
+  };
+
+  apiInstance.getMonitor(params).then((data) => {
+    console.log('API called successfully. Returned data: ' + data);
+  }).catch((error) => console.error(error));
+}();
 
 // Create global app object
 var app = express();
