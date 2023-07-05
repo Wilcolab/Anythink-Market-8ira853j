@@ -16,6 +16,7 @@ router.param("item", function(req, res, next, slug) {
       }
 
       req.item = item;
+      // TODO:
 
       return next();
     })
