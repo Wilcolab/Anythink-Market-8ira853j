@@ -310,22 +310,20 @@ router.post("/:item/comments", auth.required, function(req, res, next) {
     .catch(next);
 });
 
-router.delete("/:item/comments/:comment", auth.required, function(
+router.delete("/:item/comments/:comment", auth.required, async function(
   req,
   res,
   next
 ) {
+  const comment = await Comment.findById(req.comment._id);
+  if (!comment.seller.equals(req.payload.id)) {
+    return res.sendStatus(403);
+  }
+
   req.item.comments.remove(req.comment._id);
-  req.item
-    .save()
-    .then(
-      Comment.find({ _id: req.comment._id })
-        .remove()
-        .exec()
-    )
-    .then(function() {
-      res.sendStatus(204);
-    });
+  await req.item.save();
+  await comment.deleteOne()
+  return res.sendStatus(204);
 });
 
 module.exports = router;
