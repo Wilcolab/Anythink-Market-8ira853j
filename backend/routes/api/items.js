@@ -316,15 +316,14 @@ router.delete("/:item/comments/:comment", auth.required, async function(
   next
 ) {
   const comment = await Comment.findById(req.comment._id);
-  if (comment.seller !== req.payload.id) {
-    res.sendStatus(403);
-    return;
+  if (!comment.seller.equals(req.payload.id)) {
+    return res.sendStatus(403);
   }
 
   req.item.comments.remove(req.comment._id);
   await req.item.save();
   await comment.deleteOne()
-  res.sendStatus(204);
+  return res.sendStatus(204);
 });
 
 module.exports = router;
