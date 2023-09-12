@@ -318,8 +318,8 @@ router.delete("/:item/comments/:comment", auth.required, async function(
   const comment = await Comment.findById(req.comment._id);
   if (comment.seller !== req.payload.id) {
     res.sendStatus(403);
+    return;
   }
-  console.log({comment});
 
   req.item.comments.remove(req.comment._id);
   await req.item.save();
