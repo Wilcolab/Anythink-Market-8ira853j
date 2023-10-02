@@ -23,7 +23,7 @@
 	// these are defined in .devcontainer/.env as follows:
 	// WEBROOT_HOST_PATH=../src
 	// WEBROOT_CONTAINER_PATH=/var/www/htdoc
-	"workspaceFolder": "/var/www/htdoc",
+	// "workspaceFolder": "/var/www/htdoc",
 	
 	// NOT REQUIRED, because our mounts are defined in the .yml file
 	//
