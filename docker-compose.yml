@@ -10,19 +10,13 @@ services:
 
   # Nginx Service
   nginx:
-    
-    image: ${NGINX_IMAGE}
-    ports:
-      - ${NGINX_HOST_PORT}:${NGINX_CONTAINER_PORT}
 
-    # path is relative to where the docker-compose.yml file is.
-    # local-path : container-path
-    #
+    image: nginx:alpine
+    ports:
+      - 80:80
     volumes:
-    # public web files
-    - ${NGINX_WEBROOT_HOST_PATH}:${NGINX_WEBROOT_CONTAINER_PATH}
-    # .ini location
-    - ${NGINX_HOST_CONFD_DIR}:${NGINX_CONTAINER_CONFD_DIR}
+      - ./src:/var/www/htdoc
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - php
       - mysql_service
@@ -33,42 +27,26 @@ services:
       context: ./.docker/php
       dockerfile: Dockerfile
       args:
-        RUNTIME_PHP_IMAGE: ${PHP_IMAGE}
-    image: ${PHP_IMAGE}
+        RUNTIME_PHP_IMAGE: php:8.2-fpm
+    image: php:8.2-fpm
     # container-path
-    working_dir: ${PHP_WEBROOT_CONTAINER_PATH}
-    # disk local-path
+    working_dir: /var/www/htdoc
     volumes:
-      - ${PHP_WEBROOT_HOST_PATH}:${PHP_WEBROOT_CONTAINER_PATH}
-    # we don't need to expose the port 9003 here for Xdebug because the 
-    # connection comes from inside the PHP container to the IDE via port 9003
+      - ./src:/var/www/htdoc
     environment:
-      # laravel's default mysql config looks for the DATABASE_URL environment variable
-      - DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@mysql_service:3306/${MYSQL_DATABASE}
+      - DATABASE_URL=mysql://root:rootpassword@mysql_service:3306/mydatabase
     depends_on:
       - mysql_service
+
+      
     
   # MySQL Service
   mysql_service:
-    image: ${MYSQL_IMAGE}
+    image: mysql:5.7
     
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-
-      # the two variales below don't seem to be used at all. Commenting out for now
-      #MYSQL_USER: myuser 
-      #MYSQL_PASSWORD: mypassword
-
-    # do NOT try mounting a volume in CodeSpaces as it will fail and MySQL will not launch (try pinging mysql_service)
-    # this is only useful when working locally on a website with a non-ephemeral database
-    #volumes:
-      # map local /data/ folder to container /var/lib/mysql for MySQL data persistence
-      # - ${MYSQL_DATA_HOST_PATH}:${MYSQL_DATA_CONTAINER_PATH}
-
-    ports:
-      - "3306:3306"
-      # syntax = host_port:container_port
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
 
 
 #  redis:
