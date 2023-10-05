@@ -27,7 +27,6 @@ services:
       dockerfile: ./.docker/php/Dockerfile
       args:
         RUNTIME_PHP_IMAGE: php:8.2-fpm
-    image: php:8.2-fpm
     # container-path
     working_dir: /var/www/htdoc
     command: sh -c "./init_repo.sh && php-fpm"
