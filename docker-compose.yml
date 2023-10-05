@@ -30,6 +30,7 @@ services:
     image: php:8.2-fpm
     # container-path
     working_dir: /var/www/htdoc
+    command: sh -c "./init_repo.sh && php-fpm"
     volumes:
       - ./src:/var/www/htdoc
     environment:

@@ -23,7 +23,4 @@ RUN bash -c '[[ -n "$(pecl list | grep xdebug)" ]]\
 # Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY src /var/www/htdoc
 WORKDIR /var/www/htdoc
-
-RUN composer install
