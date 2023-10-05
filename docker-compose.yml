@@ -24,8 +24,7 @@ services:
   # PHP Service
   php:    
     build:
-      context: ./.docker/php
-      dockerfile: Dockerfile
+      dockerfile: ./.docker/php/Dockerfile
       args:
         RUNTIME_PHP_IMAGE: php:8.2-fpm
     image: php:8.2-fpm
