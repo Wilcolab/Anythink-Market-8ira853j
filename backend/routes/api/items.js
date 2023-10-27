@@ -73,6 +73,7 @@ router.get("/", auth.optional, function(req, res, next) {
 
       return Promise.all([
         Item.find(query)
+          .populate("seller")
           .limit(Number(limit))
           .skip(Number(offset))
           .sort({ createdAt: "desc" })
@@ -84,12 +85,9 @@ router.get("/", auth.optional, function(req, res, next) {
         var itemsCount = results[1];
         var user = results[2];
         return res.json({
-          items: await Promise.all(
-            items.map(async function(item) {
-              item.seller = await User.findById(item.seller);
-              return item.toJSONFor(user);
-            })
-          ),
+            items: items.map(function(item) {
+                return item.toJSONFor(user);
+            }),
           itemsCount: itemsCount
         });
       });
@@ -315,17 +313,21 @@ router.delete("/:item/comments/:comment", auth.required, function(
   res,
   next
 ) {
-  req.item.comments.remove(req.comment._id);
-  req.item
-    .save()
-    .then(
-      Comment.find({ _id: req.comment._id })
-        .remove()
-        .exec()
-    )
-    .then(function() {
-      res.sendStatus(204);
-    });
+  if (req.comment.seller.toString() === req.payload.id.toString()) {
+    req.item.comments.remove(req.comment._id);
+    req.item
+      .save()
+      .then(
+        Comment.find({ _id: req.comment._id })
+          .remove()
+          .exec()
+      )
+      .then(function() {
+        res.sendStatus(204);
+      });
+  } else {
+    res.sendStatus(403);
+  }
 });
 
 module.exports = router;

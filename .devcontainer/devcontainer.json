@@ -28,7 +28,7 @@
       "onAutoForward": "silent"
     }
   },
-  "postStartCommand": "bash -c .devcontainer/setup.sh",
+  "postCreateCommand": "/bin/bash .devcontainer/setup.sh",
 
   "settings": {
     "extensions.ignoreRecommendations": true,
