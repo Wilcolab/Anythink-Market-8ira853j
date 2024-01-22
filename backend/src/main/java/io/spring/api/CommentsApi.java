@@ -72,7 +72,11 @@ public class CommentsApi {
         .findById(item.getId(), commentId)
         .map(
             comment -> {
+              System.out.println(item.getSellerId());
+              System.out.println(comment.getUserId());
+              System.out.println(item.getSellerId().equals(comment.getUserId()));
               if (!item.getSellerId().equals(comment.getUserId())) {
+                System.out.println("Not equals");
                 throw new NoAuthorizationException(); 
               }
               commentRepository.remove(comment);
