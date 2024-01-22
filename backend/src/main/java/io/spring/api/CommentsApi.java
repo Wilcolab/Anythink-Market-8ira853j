@@ -70,6 +70,9 @@ public class CommentsApi {
         .findById(item.getId(), commentId)
         .map(
             comment -> {
+              if (item.getSellerId() != comment.getUserId()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN); 
+              }
               commentRepository.remove(comment);
               return ResponseEntity.noContent().build();
             })
