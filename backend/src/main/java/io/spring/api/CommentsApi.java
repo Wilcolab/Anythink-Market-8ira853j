@@ -1,6 +1,8 @@
 package io.spring.api;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
+
+import io.spring.api.exception.NoAuthorizationException;
 import io.spring.api.exception.ResourceNotFoundException;
 import io.spring.application.CommentQueryService;
 import io.spring.application.data.CommentData;
@@ -71,7 +73,7 @@ public class CommentsApi {
         .map(
             comment -> {
               if (item.getSellerId() != comment.getUserId()) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN); 
+                throw new NoAuthorizationException(); 
               }
               commentRepository.remove(comment);
               return ResponseEntity.noContent().build();
