@@ -1,6 +1,8 @@
 package io.spring.api;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
+
+import io.spring.api.exception.NoAuthorizationException;
 import io.spring.api.exception.ResourceNotFoundException;
 import io.spring.application.CommentQueryService;
 import io.spring.application.data.CommentData;
@@ -70,6 +72,9 @@ public class CommentsApi {
         .findById(item.getId(), commentId)
         .map(
             comment -> {
+              if (!user.getId().equals(comment.getUserId())) {
+                throw new NoAuthorizationException(); 
+              }
               commentRepository.remove(comment);
               return ResponseEntity.noContent().build();
             })
