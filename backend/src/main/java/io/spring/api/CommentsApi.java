@@ -70,6 +70,7 @@ public class CommentsApi {
         .findById(item.getId(), commentId)
         .map(
             comment -> {
+              // todo
               commentRepository.remove(comment);
               return ResponseEntity.noContent().build();
             })
