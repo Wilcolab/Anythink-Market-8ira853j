@@ -1,10 +1,13 @@
 var router = require("express").Router();
 var mongoose = require("mongoose");
+const OpenAI = require("openai");
 var Item = mongoose.model("Item");
 var Comment = mongoose.model("Comment");
 var User = mongoose.model("User");
 var auth = require("../auth");
 const { sendEvent } = require("../../lib/event");
+
+const openai = new OpenAI();
 
 // Preload item objects on routes with ':item'
 router.param("item", function(req, res, next, slug) {
@@ -139,9 +142,19 @@ router.get("/feed", auth.required, function(req, res, next) {
 
 router.post("/", auth.required, function(req, res, next) {
   User.findById(req.payload.id)
-    .then(function(user) {
+    .then(async function(user) {
       if (!user) {
         return res.sendStatus(401);
+      }
+
+      if (!req.body.item.image?.length) {
+        const response = await openai.images.generate({
+          prompt: req.body.item.description,
+          n: 1,
+          size: "256x256",
+        });
+        console.log(response.data);
+        req.body.item.image = response.data[0].url;
       }
 
       var item = new Item(req.body.item);
