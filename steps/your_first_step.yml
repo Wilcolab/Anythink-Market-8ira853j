@@ -1,0 +1,16 @@
+id: your_first_step
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: keen
+        messages:
+          - text: "<placeholder>"
+            delay: 2000
+trigger:
+  type: user_message
+  params:
+    person: keen
+  flowNode:
+    do:
+      - actionId: finish_step
