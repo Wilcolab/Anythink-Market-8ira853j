@@ -1,2 +1,0 @@
-# aws-playground
-AWS playground 
