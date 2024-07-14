@@ -3,13 +3,15 @@ package main
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 )
 
 func main() {
 	router := gin.Default()
 	router.GET("/", greet)
-	router.GET("/items", items)
 	router.HEAD("/healthcheck", healthcheck)
+	router.POST("/items", addItem)
+	router.GET("/items", items)
 
 	router.Run()
 }
@@ -23,17 +25,43 @@ func healthcheck(c *gin.Context) {
 		"status": "ok",
 	})
 }
+var inventory = []struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}{
+	{ID: 1, Name: "Galactic Goggles"},
+	{ID: 2, Name: "Meteor Muffins"},
+	{ID: 3, Name: "Alien Antenna Kit"},
+	{ID: 4, Name: "Starlight Lantern"},
+	{ID: 5, Name: "Quantum Quill"},
+}
 func items(c *gin.Context) {
-	items := []struct {
+	c.JSON(http.StatusOK, inventory)
+}
+func addItem(c *gin.Context) {
+	var newItem struct {
+		Name string `json:"name"`
+	}
+
+	if err := c.ShouldBindJSON(&newItem); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Generate a random number between 1 and 100
+	newID := rand.Intn(100) + 1
+
+	// Create the new item
+	item := struct {
 		ID   int    `json:"id"`
 		Name string `json:"name"`
 	}{
-		{ID: 1, Name: "Galactic Goggles"},
-		{ID: 2, Name: "Meteor Muffins"},
-		{ID: 3, Name: "Alien Antenna Kit"},
-		{ID: 4, Name: "Starlight Lantern"},
-		{ID: 5, Name: "Quantum Quill"},
+		ID:   newID,
+		Name: newItem.Name,
 	}
 
-	c.JSON(http.StatusOK, items)
+	// Add the new item to the inventory
+	inventory = append(inventory, item)
+
+	c.JSON(http.StatusOK, item)
 }
