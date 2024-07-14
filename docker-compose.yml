@@ -1,0 +1,15 @@
+services:
+  anythink-backend-go:
+    build: ./backend
+    container_name: anythink-backend-go
+    command: sh -c "cd backend && go get . && ./start.sh"
+
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
+    working_dir: /usr/src
+    volumes:
+      - ./:/usr/src/
+    ports:
+      - "3000:3000"
