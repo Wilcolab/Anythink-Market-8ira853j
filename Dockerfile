@@ -1,7 +1,9 @@
-FROM node:18-slim
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY . /usr/src/app
-RUN npm install --production
-EXPOSE 3000
-CMD ["npm", "start"]
+FROM node:14
+
+WORKDIR /app
+
+COPY package*.json /app
+RUN yarn install
+EXPOSE 8001
+
+CMD [ "yarn", "start" ]
