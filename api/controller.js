@@ -24,9 +24,6 @@ exports.calculate = function (req, res) {
     divide: function (a, b) {
       return a / b;
     },
-    power: function (a, b) {
-      return Math.pow(a, b);
-    },
   };
 
   if (!req.query.operation) {
