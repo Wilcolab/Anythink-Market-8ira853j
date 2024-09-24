@@ -25,7 +25,7 @@ exports.calculate = function (req, res) {
       return a / b;
     },
     power: function (a, b) {
-      return a * b;
+      return a ^ b;
     },
   };
 
