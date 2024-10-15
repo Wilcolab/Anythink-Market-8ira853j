@@ -11,7 +11,7 @@ class AnythinkClient {
   constructor() {
     this.client = axios.create({
       baseURL: "http://localhost:3000",
-      timeout: 10000,
+      timeout: 2000,
     });
   }
 
@@ -123,12 +123,12 @@ class AnythinkClient {
     return result.data?.item;
   }
 
-  async commentOnItem(slug, commentBody, callingUser) {
+  async commentOnItem(slug, commenBody, callingUser) {
     const result = await this.#apiCall({
       method: Method.POST,
       url: `/api/items/${slug}/comments`,
       callingUser,
-      data: { comment: { body: commentBody } },
+      data: { comment: { body: commenBody } },
     });
     return result.data?.comment;
   }

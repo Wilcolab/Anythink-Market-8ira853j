@@ -62,7 +62,7 @@ addopts = '''
   --asyncio-mode=auto
 '''
 env = [
-  "SECRET_KEY=e6F9KvSDf4dyXj",
+  "SECRET_KEY=secret",
   "MAX_CONNECTIONS_COUNT=1",
   "MIN_CONNECTIONS_COUNT=1"
 ]

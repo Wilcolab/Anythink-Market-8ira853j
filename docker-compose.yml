@@ -1,3 +1,4 @@
+version: "3.8"
 services:
   anythink-backend-python:
     build: ./backend
@@ -57,10 +58,11 @@ services:
       - '5433:5432'
 
   anythink-ack:
-    image: public.ecr.aws/v0a2l7y2/wilco/anythink-ack:latest
+    build: ./frontend
     container_name: anythink-ack
-    environment:
-      - GITHUB_TOKEN=$GITHUB_TOKEN
-      - CODESPACE_NAME=$CODESPACE_NAME
+    command: sh -c "/wait-for-it.sh anythink-frontend-react:3001 -q -t 1000 && ./anythink_ack.sh"
+    working_dir: /usr/src
+    volumes:
+      - ./:/usr/src/
     depends_on:
       - "anythink-frontend-react"
