@@ -9,7 +9,7 @@ from app.models.schemas.jwt import JWTMeta, JWTUser
 
 JWT_SUBJECT = "access"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # one week
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  # one week
 
 
 def create_jwt_token(
