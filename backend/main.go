@@ -9,9 +9,9 @@ import (
 )
 
 type Item struct {
-	ID      int    `json:"id"`
-	Name    string `json:"name"`
-	ViewCount int  `json:"view_count"`
+	ID        int    `json:"id"`
+	Name      string `json:"name"`
+	ViewCount int    `json:"view_count"`
 }
 
 var (
@@ -30,6 +30,7 @@ func main() {
 	router.GET("/", greet)
 	router.GET("/items", getItems)
 	router.GET("/items/:id", getItemByID)
+	router.GET("/items/popular", getPopularItem)
 	router.POST("/items", addItem)
 	router.HEAD("/healthcheck", healthcheck)
 
@@ -96,4 +97,23 @@ func incrementViewCount(item *Item) {
 	mu.Lock()
 	defer mu.Unlock()
 	item.ViewCount++
+}
+
+func getPopularItem(c *gin.Context) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	if len(items) == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No items available"})
+		return
+	}
+
+	var popularItem *Item
+	for i := range items {
+		if popularItem == nil || items[i].ViewCount > popularItem.ViewCount {
+			popularItem = &items[i]
+		}
+	}
+
+	c.JSON(http.StatusOK, popularItem)
 }
