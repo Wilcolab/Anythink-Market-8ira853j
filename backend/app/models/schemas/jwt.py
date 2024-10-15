@@ -11,3 +11,4 @@ class JWTMeta(BaseModel):
 
 class JWTUser(BaseModel):
     username: str
+    role: UserRole
