@@ -1,5 +1,6 @@
 from typing import List, Dict
 
+from backend.app.api.dependencies.authentication import get_current_user_authorizer
 from fastapi import APIRouter, Body, Depends, HTTPException
 from starlette.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
@@ -21,6 +22,8 @@ from app.resources import strings
 from app.services import jwt
 from app.services.authentication import check_email_is_taken, check_username_is_taken
 from app.services.event import send_event
+from fastapi import Security
+from fastapi.security import OAuth2PasswordBearer
 
 
 router = APIRouter()
@@ -28,7 +31,11 @@ router = APIRouter()
 @router.get("/", response_model=Dict[str, List[User]], name="users:get-all-users")
 async def retrieve_all_users(
     users_repo: UsersRepository = Depends(get_repository(UsersRepository)),
+    user: User = Depends(get_current_user_authorizer()),
 ) -> Dict[str, List[User]]:
+    if user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not enough permissions")
+    
     users = await users_repo.get_all_users()
     return {"users": users}
 
