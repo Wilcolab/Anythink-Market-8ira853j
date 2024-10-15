@@ -8,6 +8,7 @@ import (
 func main() {
 	router := gin.Default()
 	router.GET("/", greet)
+	router.GET("/items", getItems)
 	router.HEAD("/healthcheck", healthcheck)
 
 	router.Run()
@@ -21,4 +22,15 @@ func healthcheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
+}
+
+func getItems(c *gin.Context) {
+	items := []gin.H{
+		{"id": 1, "name": "Galactic Goggles"},
+		{"id": 2, "name": "Meteor Muffins"},
+		{"id": 3, "name": "Alien Antenna Kit"},
+		{"id": 4, "name": "Starlight Lantern"},
+		{"id": 5, "name": "Quantum Quill"},
+	}
+	c.JSON(http.StatusOK, items)
 }
