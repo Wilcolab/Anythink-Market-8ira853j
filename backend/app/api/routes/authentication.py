@@ -28,7 +28,11 @@ router = APIRouter()
 @router.get("/", response_model=Dict[str, List[User]], name="users:get-all-users")
 async def retrieve_all_users(
     users_repo: UsersRepository = Depends(get_repository(UsersRepository)),
+    current_user: User = Depends(jwt.get_current_user),
 ) -> Dict[str, List[User]]:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not enough permissions")
+    
     users = await users_repo.get_all_users()
     return {"users": users}
 
