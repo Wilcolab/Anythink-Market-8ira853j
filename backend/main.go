@@ -8,6 +8,7 @@ import (
 func main() {
 	router := gin.Default()
 	router.GET("/", greet)
+	router.GET("/items", getItems)
 	router.HEAD("/healthcheck", healthcheck)
 
 	router.Run()
@@ -33,5 +34,3 @@ func getItems(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, items)
 }
-
-router.GET("/items", getItems)
