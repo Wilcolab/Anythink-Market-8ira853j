@@ -1,4 +1,22 @@
 {
-  "name": "Anythink Development Container",
-  "image": "public.ecr.aws/v0a2l7y2/wilco/anythink-devcontainer:latest"
+  "name": "AWS playground",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/aws-cli:1": {}
+  },
+  "settings": {
+    "extensions.ignoreRecommendations": true,
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.colorCustomizations": {},
+    "workbench.welcomePage.walkthroughs.openOnInstall": false,
+    "workbench.welcomePage.experimental.videoTutorials": "off",
+    "github.codespaces.defaultExtensions": []
+  }
 }
