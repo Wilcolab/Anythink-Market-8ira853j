@@ -1,6 +1,7 @@
 version: 2.1
 
 jobs:
+  working_directory: frontend
   build-and-test:
     docker:
       - image: cimg/node:16.18
