@@ -1,0 +1,8 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-dotnettools.csdevkit"]
+    }
+  },
+  "forwardPorts": [5000]
+}
