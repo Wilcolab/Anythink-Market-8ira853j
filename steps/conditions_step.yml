@@ -1,0 +1,38 @@
+id: conditions_step
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: keen
+        messages:
+          - text: "What's up?"
+            delay: 2000
+trigger:
+  type: user_message
+  params:
+    person: keen
+  flowNode:
+    if:
+      conditions:
+        - conditionId: text_contains_strings
+          params:
+            text: <placeholder>
+            strings:
+              - "<placeholder>"
+      then:
+        do:
+          - actionId: bot_message
+            params:
+              person: keen
+              messages:
+                - text: "This is great to hear :)"
+                  delay: 2000
+          - actionId: finish_step
+      else:
+        do:
+          - actionId: bot_message
+            params:
+              person: keen
+              messages:
+                - text: "Can you try something else?"
+                  delay: 2000
