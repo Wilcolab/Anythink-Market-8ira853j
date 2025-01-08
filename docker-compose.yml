@@ -1,58 +1,78 @@
-version: "3.8"
 services:
-  anythink-backend-node:
-    build: ./backend
-    container_name: anythink-backend-node
-    command: sh -c "cd backend && yarn install && /wait-for-it.sh mongodb-node:27017 -q -t 60 && yarn dev"
-
+  postgres:
+    image: postgres:14
+    ports:
+      - "5432:5432"
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - MONGODB_URI=mongodb://mongodb-node:27017/anythink-market
-      - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
-    working_dir: /usr/src
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: riskistore
     volumes:
-      - ./:/usr/src/
-      - /usr/src/backend/node_modules
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: sh -c "npm run migration:run && npm run seed && npm run start:dev"
     ports:
       - "3000:3000"
-    depends_on:
-      - "mongodb-node"
-
-  anythink-frontend-react:
-    build: ./frontend
-    container_name: anythink-frontend-react
-    command: sh -c "cd frontend && yarn install && /wait-for-it.sh anythink-backend-node:3000 -t 120 --strict -- curl --head -X GET --retry 30 --retry-connrefused --retry-delay 1 anythink-backend-node:3000/api/ping && yarn start"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
-      - PORT=3001
-      - REACT_APP_BACKEND_URL=${CODESPACE_BACKEND_URL:-http://localhost:3000}
-      - WDS_SOCKET_PORT=${CODESPACE_WDS_SOCKET_PORT:-3001}
-    working_dir: /usr/src
-    volumes:
-      - ./:/usr/src/
-      - /usr/src/frontend/node_modules
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=riskistore
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     ports:
       - "3001:3001"
-    depends_on:
-      - "anythink-backend-node"
-
-  mongodb-node:
-    container_name: mongodb-node
-    restart: always
-    image: mongo
-    logging:
-      driver: none
     volumes:
-      - ~/mongo/data:/data/db
-    ports:
-      - '27017:27017'
-
-  anythink-ack:
-    image: public.ecr.aws/v0a2l7y2/wilco/anythink-ack:latest
-    container_name: anythink-ack
+      - ./frontend:/app
+      - /app/node_modules
     environment:
-      - GITHUB_TOKEN=$GITHUB_TOKEN
-      - CODESPACE_NAME=$CODESPACE_NAME
+      - VITE_BACKEND_URL=${CODESPACE_BACKEND_URL:-http://localhost:3000}
+      - PORT=3001
     depends_on:
-      - "anythink-frontend-react" 
+      - backend
+
+volumes:
+  postgres_data:
