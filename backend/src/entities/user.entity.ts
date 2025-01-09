@@ -22,7 +22,4 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column({ type: 'date', nullable: true })
-  birthday: Date;
 }
