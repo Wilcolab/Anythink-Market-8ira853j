@@ -5,6 +5,7 @@ export const CreateUserSchema = z.object({
   lastName: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(6),
+  birthday: z.date().optional(),
 });
 
 export const UpdateUserSchema = CreateUserSchema.partial();
