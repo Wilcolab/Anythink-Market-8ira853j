@@ -56,6 +56,11 @@ export default function UserProfile() {
                 <strong>Email:</strong> {user.email}
               </Typography>
             </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">
+                <strong>Birthday</strong> {user.birthday ? user.birthday : 'N/A'}
+              </Typography>
+            </Grid>
           </Grid>
         </CardContent>
       </Card>

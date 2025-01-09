@@ -80,6 +80,7 @@ export class AuthController {
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      birthday: user.birthday
     };
   }
 }

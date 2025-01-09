@@ -11,18 +11,21 @@ const createUserSeedData = async () => {
       lastName: 'Doe',
       email: 'john.doe@example.com',
       password: defaultPassword,
+      birthday: new Date('1990-01-15'), // Added birthday
     },
     {
       firstName: 'Jane',
       lastName: 'Smith',
       email: 'jane.smith@example.com',
       password: defaultPassword,
+      birthday: new Date('1992-03-20'), // Added birthday
     },
     {
       firstName: 'Admin',
       lastName: 'User',
       email: 'admin@example.com',
       password: defaultPassword,
+      birthday: new Date('1985-12-10'), // Added birthday
     }
   ];
 };
