@@ -1,26 +1,37 @@
-# Compiled output
-backend/dist/
-*.js
-*.js.map
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Dependency directories
-backend/node_modules/
-frontend/node_modules/
+# dependencies
+/node_modules
+/backend/node_modules
+/frontend/node_modules
+/.wilco-helpers/node_modules
+/tests/e2e/node_modules
+/tests/frontend/node_modules/
+/tests/frontend/test-results/
+/tests/frontend/playwright-report/
+/tests/frontend/playwright/.cache/
 
-# Environment files
-backend/.env
-backend/.env.local
-frontend/.env
-frontend/.env.local
+/.pnp
+.pnp.js
 
-# Logs
-logs/
-*.log
+# testing
+/coverage
 
-# IDE-specific files
-.vscode/
-.idea/
+# production
+/backend/build
+/frontend/build
 
-# OS generated files
+# misc
 .DS_Store
-Thumbs.db
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#IDEs
+/.idea/
