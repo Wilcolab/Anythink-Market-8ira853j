@@ -1,1 +1,0 @@
-# Python Quantum Computing Playground
