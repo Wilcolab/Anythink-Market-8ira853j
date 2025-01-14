@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>API settings</title>
+        <input-field type="single-select">
+            <name>apiProvider</name>
+            <label>Are you a cat or dog person?</label>
+            <options>
+                <option>
+                    <id>thecatapi</id>
+                    <name>I am a cat person</name>
+                </option>
+                <option>
+                    <id>thedogapi</id>
+                    <name>I am a dog person</name>
+                </option>
+            </options>
+            <defaultValue>thedogapi</defaultValue>
+        </input-field>
+
+        <input-field type="password">
+            <name>apiAccessKey</name>
+            <label>Access Key</label>
+            <helpText>You don't need an API key to get a single image. This input is optional for > 10 images. https://developers.thecatapi.com</helpText>
+        </input-field>
+    </card>
+
+</config>
