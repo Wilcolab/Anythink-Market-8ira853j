@@ -1,45 +1,78 @@
 services:
-  shopware:
-    # use either tag "latest" or any other version like "6.5.3.0", ...
-    image: dockware/dev:latest
-    container_name: shopware
+  postgres:
+    image: postgres:14
     ports:
-      - "80:80"
-      - "3306:3306"
-      - "22:22"
-      - "8888:8888"
-      - "9999:9999"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: riskistore
     volumes:
-      - "db_volume:/var/lib/mysql"
-      - "shop_volume:/var/www/html"
-      - "./config/packages/framework.yaml:/var/www/html/config/packages/framework.yaml"
-      - "./ShopwareAcademyStorefrontController:/var/www/html/custom/plugins/ShopwareAcademyStorefrontController"
-    networks:
-      - web
-    environment:
-      # default = 0, recommended to be OFF for frontend devs
-      - XDEBUG_ENABLED=1
-      - APP_URL=https://${CODESPACE_NAME}-80.app.github.dev
-      - SHOP_DOMAIN=${CODESPACE_NAME}-80.app.github.dev
-      - SHOP_SCHEME=https
-      - DOCKWARE_DISABLE_SSL=0
-      - TRUSTED_PROXIES=172.0.0.0/8
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  anythink-ack:
-    image: public.ecr.aws/v0a2l7y2/wilco/anythink-ack:latest
-    container_name: anythink-ack
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
     environment:
-      - GITHUB_TOKEN=$GITHUB_TOKEN
-      - CODESPACE_NAME=$CODESPACE_NAME
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - "shopware"
+      - zookeeper
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: sh -c "npm run migration:run && npm run seed && npm run start:dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=riskistore
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_BACKEND_URL=${CODESPACE_BACKEND_URL:-http://localhost:3000}
+      - PORT=3001
+    depends_on:
+      - backend
 
 volumes:
-  db_volume:
-    driver: local
-  shop_volume:
-    driver: local
-
-networks:
-  web:
-    external: false
+  postgres_data:

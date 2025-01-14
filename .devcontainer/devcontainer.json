@@ -1,0 +1,57 @@
+{
+    "name": "Wilco Development Container",
+    "forwardPorts": [3000, 3001, 5432, 2181, 9092],
+    "portsAttributes": {
+      "3000": {
+        "label": "Backend",
+        "elevateIfNeeded": true,
+        "requireLocalPort": true,
+        "onAutoForward": "silent"
+      },
+      "3001": {
+        "label": "Frontend",
+        "elevateIfNeeded": true,
+        "requireLocalPort": true,
+        "onAutoForward": "silent"
+      },
+      "5432": {
+        "label": "Database",
+        "elevateIfNeeded": true,
+        "requireLocalPort": true,
+        "onAutoForward": "silent"
+      },
+      "2181": {
+        "label": "Zookeeper",
+        "elevateIfNeeded": true,
+        "requireLocalPort": true,
+        "onAutoForward": "silent"
+      },
+      "9092": {
+        "label": "Kafka",
+        "elevateIfNeeded": true,
+        "requireLocalPort": true,
+        "onAutoForward": "silent"
+      }
+    },
+    "postCreateCommand": "/bin/bash .devcontainer/setup.sh",
+  
+    "features": {
+      "ghcr.io/devcontainers/features/sshd:1": {
+        "version": "latest"
+      }
+    },
+  
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "extensions.ignoreRecommendations": true,
+          "workbench.startupEditor": "none",
+          "workbench.colorTheme": "Visual Studio Dark",
+          "workbench.colorCustomizations": {},
+          "workbench.welcomePage.walkthroughs.openOnInstall": false,
+          "workbench.welcomePage.experimental.videoTutorials": "off",
+          "github.codespaces.defaultExtensions": []
+        }
+      }
+    }
+  }

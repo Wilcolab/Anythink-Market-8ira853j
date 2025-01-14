@@ -1,2 +1,26 @@
-.idea
-node_modules
+# Compiled output
+backend/dist/
+*.js
+*.js.map
+
+# Dependency directories
+backend/node_modules/
+frontend/node_modules/
+
+# Environment files
+backend/.env
+backend/.env.local
+frontend/.env
+frontend/.env.local
+
+# Logs
+logs/
+*.log
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
