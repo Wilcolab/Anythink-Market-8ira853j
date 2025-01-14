@@ -31,6 +31,16 @@ class ImageController extends StorefrontController
     )]
     public function showImage(?string $productId = null, SalesChannelContext $context): Response
     {
+        $productName = 'Random Image';
+
+        if ($productId) {
+            $criteria = new Criteria([$productId]);
+            $product = $this->productRepository->search($criteria, $context->getContext())->first();
+            if ($product) {
+                $productName = $product->getTranslated()["name"];
+            }
+        }
+
         $apiAccessKey = $this->systemConfigService->get('AcademyStorefrontController.config.apiAccessKey', $context->getSalesChannelId());
         $apiProvider = $this->systemConfigService->get('AcademyStorefrontController.config.apiProvider', $context->getSalesChannelId());
 
@@ -44,7 +54,8 @@ class ImageController extends StorefrontController
         $imageUrl = $data[0]['url'];
 
         return $this->renderStorefront('@AcademyStorefrontController/storefront/page/image.html.twig', [
-            'imageUrl' => $imageUrl
+            'imageUrl' => $imageUrl,
+            'productName' => $productName
         ]);
     }
 }
