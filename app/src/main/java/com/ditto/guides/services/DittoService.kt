@@ -163,34 +163,33 @@ class DittoServiceImp(
      * whenever changes occur in the collection
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
+        var observer: DittoStoreObserver? = null
+        
         try {
             ditto?.let { ditto ->
-                planetObserver = ditto.store.collection("planets")
-                    .find("isArchived = :isArchived")
-                    .args(mapOf("isArchived" to false))
+                observer = ditto.store.collection("planets")
                     .sort("distanceFromSun", ascending = true)
                     .observe { docs ->
-                        val planets = docs.map { doc ->
-                            Planet(
-                                id = doc.id,
-                                name = doc.value["name"] as String,
-                                distanceFromSun = (doc.value["distanceFromSun"] as Number).toDouble(),
-                                diameter = (doc.value["diameter"] as Number).toDouble(),
-                                mass = (doc.value["mass"] as Number).toDouble(),
-                                isArchived = doc.value["isArchived"] as Boolean
-                            )
-                        }
-                        trySend(planets)
+                        try {
+                            val planets = docs.map { doc ->
+                                Planet(
+                                    id = doc.id,
+                                    name = doc.value["name"].toString(),
+                                    distanceFromSun = doc.value["distanceFromSun"] as Int,
+                                    diameter = doc.value["diameter"] as Int,
+                                    mass = doc.value["mass"] as Int,
+                                    isArchived = doc.value["isArchived"]?.toString() == "1"
+                                )
+                            }
+                            trySend(planets)
+                        } catch (e: Exception) { }
                     }
-            } ?: trySend(emptyList())
+            }
         } catch (e: Exception) {
-            errorService.showError("Failed to observe planets: ${e.message}")
             trySend(emptyList())
         }
 
-        awaitClose {
-            planetObserver?.stop()
-        }
+        awaitClose { }
     }
 
     /**
