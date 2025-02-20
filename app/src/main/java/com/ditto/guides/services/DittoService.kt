@@ -163,9 +163,31 @@ class DittoServiceImp(
      * whenever changes occur in the collection
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
-        // Return empty flow for now
-        trySend(emptyList())
-        awaitClose { }
+        try {
+            ditto?.let {
+                planetObserver = it.store.registerObserver(
+                    """
+                SELECT *
+                FROM planets
+                WHERE isArchived = :isArchived
+                ORDER BY orderFromSun
+            """, mapOf("isArchived" to false)
+                ) { results ->
+                    val planets = results.items.map { item ->
+                        Planet.fromMap(item.value)
+                    }
+                    trySend(planets)
+                }
+            }
+
+            // Clean up the observer when the flow is cancelled
+            awaitClose {
+                planetObserver?.close()
+                planetObserver = null
+            }
+        } catch (e: Exception) {
+            errorService.showError("Failed to setup observer for getting planets: ${e.message}")
+        }
     }
 
     /**
