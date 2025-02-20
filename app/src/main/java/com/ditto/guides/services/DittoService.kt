@@ -118,9 +118,31 @@ class DittoServiceImp(
      * whenever changes occur in the collection
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
-        // Return empty flow for now
-        trySend(emptyList())
-        awaitClose { }
+        val collection = ditto?.store?.collection("planets")
+        val observer = collection
+            ?.find("isArchived == false")
+            ?.sort("distanceFromSun", ascending = true)
+            ?.observe { docs, error ->
+                error?.let {
+                    errorService.handleDittoError(it)
+                    return@observe
+                }
+
+                val planets = docs.map { doc ->
+                    Planet(
+                        id = doc.id,
+                        name = doc.value["name"] as String,
+                        distanceFromSun = doc.value["distanceFromSun"] as Double,
+                        mass = doc.value["mass"] as Double,
+                        isArchived = doc.value["isArchived"] as Boolean
+                    )
+                }
+                trySend(planets)
+            }
+
+        awaitClose {
+            observer?.stop()
+        }
     }
 
     /**
