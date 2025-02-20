@@ -163,33 +163,31 @@ class DittoServiceImp(
      * whenever changes occur in the collection
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
-        var observer: DittoStoreObserver? = null
-        
         try {
-            ditto?.let { ditto ->
-                observer = ditto.store.collection("planets")
-                    .sort("distanceFromSun", ascending = true)
-                    .observe { docs ->
-                        try {
-                            val planets = docs.map { doc ->
-                                Planet(
-                                    id = doc.id,
-                                    name = doc.value["name"].toString(),
-                                    distanceFromSun = doc.value["distanceFromSun"] as Int,
-                                    diameter = doc.value["diameter"] as Int,
-                                    mass = doc.value["mass"] as Int,
-                                    isArchived = doc.value["isArchived"]?.toString() == "1"
-                                )
-                            }
-                            trySend(planets)
-                        } catch (e: Exception) { }
+            ditto?.let {
+                planetObserver = it.store.registerObserver(
+                    """
+                SELECT *
+                FROM planets
+                WHERE isArchived = :isArchived
+                ORDER BY orderFromSun
+            """, mapOf("isArchived" to false)
+                ) { results ->
+                    val planets = results.items.map { item ->
+                        Planet.fromMap(item.value)
                     }
+                    trySend(planets)
+                }
+            }
+
+            // Clean up the observer when the flow is cancelled
+            awaitClose {
+                planetObserver?.close()
+                planetObserver = null
             }
         } catch (e: Exception) {
-            trySend(emptyList())
+            errorService.showError("Failed to setup observer for getting planets: ${e.message}")
         }
-
-        awaitClose { }
     }
 
     /**
