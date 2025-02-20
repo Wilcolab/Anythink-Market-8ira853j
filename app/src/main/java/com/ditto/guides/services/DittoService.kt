@@ -118,30 +118,47 @@ class DittoServiceImp(
      * whenever changes occur in the collection
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
-        val collection = ditto?.store?.collection("planets")
-        val observer = collection
-            ?.find("isArchived == false")
-            ?.sort("distanceFromSun", ascending = true)
-            ?.observe { docs, error ->
-                error?.let {
-                    errorService.handleDittoError(it)
-                    return@observe
-                }
+        val collection = ditto?.store?.collection("planets") ?: run {
+            errorService.handleDittoError(DittoError("Ditto not initialized"))
+            return@callbackFlow
+        }
 
-                val planets = docs.map { doc ->
-                    Planet(
-                        id = doc.id,
-                        name = doc.value["name"] as String,
-                        distanceFromSun = doc.value["distanceFromSun"] as Double,
-                        mass = doc.value["mass"] as Double,
-                        isArchived = doc.value["isArchived"] as Boolean
-                    )
-                }
-                trySend(planets)
+        val query = """
+            SELECT *
+            FROM planets
+            WHERE isArchived = false
+            ORDER BY distanceFromSun ASC
+        """.trimIndent()
+
+        val observer = collection.find(query).observe { docs, error ->
+            if (error != null) {
+                errorService.handleDittoError(error)
+                return@observe
             }
 
+            try {
+                val planets = docs.mapNotNull { doc ->
+                    try {
+                        Planet(
+                            id = doc.id,
+                            name = doc.value["name"] as? String ?: return@mapNotNull null,
+                            distanceFromSun = (doc.value["distanceFromSun"] as? Number)?.toDouble() ?: return@mapNotNull null,
+                            mass = (doc.value["mass"] as? Number)?.toDouble() ?: return@mapNotNull null,
+                            isArchived = doc.value["isArchived"] as? Boolean ?: false
+                        )
+                    } catch (e: Exception) {
+                        errorService.handleDittoError(DittoError("Failed to parse planet: ${doc.id}"))
+                        null
+                    }
+                }
+                trySend(planets)
+            } catch (e: Exception) {
+                errorService.handleDittoError(DittoError("Failed to process planets query"))
+            }
+        }
+
         awaitClose {
-            observer?.stop()
+            observer.stop()
         }
     }
 
