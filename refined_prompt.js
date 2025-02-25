@@ -38,6 +38,7 @@ function toCamelCase(str) {
         // Join words back together
         .join('');
 }
+
 /**
  * Converts a string to dot.case format.
  * Handles multiple word separators (spaces, hyphens, underscores)
