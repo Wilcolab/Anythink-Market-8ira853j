@@ -171,6 +171,7 @@ class DittoServiceImp(
                 FROM planets
                 WHERE isArchived = :isArchived
                 ORDER BY orderFromSun
+                
             """, mapOf("isArchived" to false)
                 ) { results ->
                     val planets = results.items.map { item ->
