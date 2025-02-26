@@ -164,20 +164,40 @@ class DittoServiceImp(
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
         try {
-            ditto?.let {
-                planetObserver = it.store.registerObserver(
+            ditto?.let { ditto ->
+                // Direct query for planets
+                val results = ditto.store.execute(
                     """
-                SELECT *
-                FROM planets
-                WHERE isArchived = :isArchived
-                ORDER BY orderFromSun
+                    SELECT *
+                    FROM planets
+                    WHERE isArchived = :isArchived
+                    ORDER BY orderFromSun
+                    """, 
+                    mapOf("isArchived" to false)
+                )
                 
-            """, mapOf("isArchived" to false)
-                ) { results ->
-                    val planets = results.items.map { item ->
+                // Map results to Planet objects
+                val planets = results.items.map { item ->
+                    Planet.fromMap(item.value)
+                }
+                
+                // Send the initial results
+                trySend(planets)
+                
+                // Set up observer for subsequent changes
+                planetObserver = ditto.store.registerObserver(
+                    """
+                    SELECT *
+                    FROM planets
+                    WHERE isArchived = :isArchived
+                    ORDER BY orderFromSun
+                    """, 
+                    mapOf("isArchived" to false)
+                ) { updatedResults ->
+                    val updatedPlanets = updatedResults.items.map { item ->
                         Planet.fromMap(item.value)
                     }
-                    trySend(planets)
+                    trySend(updatedPlanets)
                 }
             }
 
@@ -187,7 +207,7 @@ class DittoServiceImp(
                 planetObserver = null
             }
         } catch (e: Exception) {
-            errorService.showError("Failed to setup observer for getting planets: ${e.message}")
+            errorService.showError("Failed to get planets: ${e.message}")
         }
     }
 
