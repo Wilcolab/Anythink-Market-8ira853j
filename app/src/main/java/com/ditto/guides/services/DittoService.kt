@@ -163,6 +163,8 @@ class DittoServiceImp(
      * whenever changes occur in the collection
      */
     override fun getPlanets(): Flow<List<Planet>> = callbackFlow {
+
+        
         // Return empty flow for now
         trySend(emptyList())
         awaitClose { }
