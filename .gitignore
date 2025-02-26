@@ -1,37 +1,100 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/backend/node_modules
-/frontend/node_modules
-/.wilco-helpers/node_modules
-/tests/e2e/node_modules
-/tests/frontend/node_modules/
-/tests/frontend/test-results/
-/tests/frontend/playwright-report/
-/tests/frontend/playwright/.cache/
-
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/backend/build
-/frontend/build
-
-# misc
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
 .DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
 
-#IDEs
-/.idea/
+##VSCode
+.vscode/
+
+# Xcode
+## User settings
+SwiftUI/xcuserdata/
+SwiftUI/*.xcodeproj/xcuserdata/
+SwiftUI/*.xcworkspace/xcuserdata/
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+SwiftUI/timeline.xctimeline
+SwiftUI/playground.xcworkspace
+
+# Swift Package Manager
+SwiftUI/.build/
+SwiftUI/Packages/
+
+# CocoaPods
+SwiftUI/Pods/
+SwiftUI/*.xcconfig
+SwiftUI/Podfile.lock
+
+# Carthage
+SwiftUI/Carthage/Build/
+
+# fastlane
+SwiftUI/fastlane/report.xml
+SwiftUI/fastlane/Preview.html
+SwiftUI/fastlane/screenshots/**/*.png
+SwiftUI/fastlane/test_output
+
+# Code Injection
+SwiftUI/iOSInjectionProject/
+
+# Build products
+SwiftUI/build/
+SwiftUI/DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+## Android
+.idea
+shelf/
+workspace.xml
+.kotlin
+.gradle
+local.properties
+*.iml
+build/
+app/build/
+captures/
+.externalNativeBuild
+.cxx
+app/release/
+app/debug/
+app/*.aab
+app/*.apk
+*.jks
+*.keystore
+app/google-services.json
