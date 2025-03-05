@@ -8,6 +8,7 @@ from app.database.db_manager import (
 )
 from app.models.llm_service import LLMService
 from fastapi.security import OAuth2PasswordBearer
+import re
 
 router = APIRouter()
 llm_service = LLMService()
@@ -36,7 +37,8 @@ async def secure_query(
     request: QueryRequest,
     current_user: Optional[User] = Depends(get_optional_user)
 ):
-    query = request.query
+    pattern = r'(?i)(select|update|delete|insert|drop|alter)'
+    query = re.sub(pattern, "", request.query)
     
     intent_tag = llm_service.interpret_user_intent(query)
     
