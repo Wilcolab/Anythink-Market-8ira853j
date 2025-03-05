@@ -39,6 +39,15 @@ class LLMService:
             logger.error(f"Error initializing Azure OpenAI client: {str(e)}")
             raise
 
+    def context_filter(self, response):
+        """Analyze and filter response based on sentiment or keywords."""
+        analysis = sentiment_analyzer(response)
+        for result in analysis:
+            if result['label'] == 'NEGATIVE' and result['score'] > 0.75:
+                return "[Filtered due to negative sentiment]"
+        return response
+
+    
     def generate_response(self, query, context=None):
         system_message = "You are a secure financial information concierge. "
         system_message += "Provide helpful, accurate, and concise responses about financial information. "
@@ -62,7 +71,7 @@ class LLMService:
 
             if response.choices and len(response.choices) > 0:
                 logger.info(response.choices[0].message.content)
-                return response.choices[0].message.content
+                return self.context_filter(response.choices[0].message.content)
             else:
                 return "I'm sorry, I couldn't generate a response. Please try again."
 
