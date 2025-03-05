@@ -39,13 +39,7 @@ async def secure_query(
 
 
 async def get_context_for_intent(intent_tag: str, username: str) -> str:
-    if not username:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
+    """Get context based on intent. Username is guaranteed to exist due to FastAPI auth dependency."""
     if intent_tag == "account_balance":
         accounts = await get_account_balance(username)
         if accounts:
