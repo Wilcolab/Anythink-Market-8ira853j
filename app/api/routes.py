@@ -54,10 +54,10 @@ async def secure_query(
 
 
 async def get_context_for_intent(intent_tag: str, username: str = None) -> str:
-    if intent_tag == "account_balance":
-        if not username:
-            return "Account information is only available for authenticated users."
+    if not username:
+        return "Authentication required. Please login to access this information."
 
+    if intent_tag == "account_balance":
         accounts = await get_account_balance(username)
         if accounts:
             accounts_info = "\n".join(
@@ -67,23 +67,13 @@ async def get_context_for_intent(intent_tag: str, username: str = None) -> str:
             return "No account information available."
 
     elif intent_tag in ["transaction_history", "spending_analysis"]:
-        if username:
-            transactions = await get_recent_transactions(username)
-            if transactions:
-                trans_info = "\n".join(
-                    [f"{t['transaction_date'].split()[0]} - {t['description']} - ${t['amount']:.2f} ({t['transaction_type']})" for t in transactions])
-                return f"Recent Transactions for {username}:\n{trans_info}"
-            else:
-                return "No recent transactions found for this user."
+        transactions = await get_recent_transactions(username)
+        if transactions:
+            trans_info = "\n".join(
+                [f"{t['transaction_date'].split()[0]} - {t['description']} - ${t['amount']:.2f} ({t['transaction_type']})" for t in transactions])
+            return f"Recent Transactions for {username}:\n{trans_info}"
         else:
-            # For anonymous users, return all recent transactions in the system
-            transactions = await get_all_recent_transactions(5)
-            if transactions:
-                trans_info = "\n".join(
-                    [f"{t['transaction_date'].split()[0]} - {t['username']} - {t['description']} - ${t['amount']:.2f} ({t['transaction_type']})" for t in transactions])
-                return f"Recent Transactions in the system:\n{trans_info}"
-            else:
-                return "No recent transactions found in the system."
+            return "No recent transactions found for this user."
 
     else:
         data_items = await get_client_data(intent_tag) if intent_tag else []
