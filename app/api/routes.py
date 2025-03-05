@@ -36,18 +36,13 @@ async def get_optional_user(authorization: Optional[str] = Header(None)):
 async def secure_query(
     request: QueryRequest,
     background_tasks: BackgroundTasks,
-    current_user: Optional[User] = Depends(get_optional_user)
+    current_user: User = Depends(get_current_user)
 ):
     pattern = r'(?i)\b(select|update|delete|insert|drop|alter)\b|--|;|\'|\"|\\'
     query = re.sub(pattern, "", request.query)
     
     intent_tag = llm_service.interpret_user_intent(query)
-    
-    if current_user:
-        context = await get_context_for_intent(intent_tag, current_user.username)
-    else:
-        context = await get_context_for_intent(intent_tag, None)
-    
+    context = await get_context_for_intent(intent_tag, current_user.username)
     response = llm_service.generate_response(query, context)
     
     return QueryResponse(response=response)
