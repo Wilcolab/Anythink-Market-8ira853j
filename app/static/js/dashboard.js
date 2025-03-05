@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (token) {
     fetchUserInfo(token);
   } else {
+    console.log("no valid token, redirect to login");
     window.location.href = "/login";
   }
 
