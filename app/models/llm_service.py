@@ -39,7 +39,6 @@ class LLMService:
             raise
     
     def generate_response(self, query, context=None):
-        logger.info(query)
         system_message = "You are a secure financial information concierge. "
         system_message += "Provide helpful, accurate, and concise responses about financial information. "
         system_message += "Never reveal sensitive information unless explicitly authorized. "
@@ -60,7 +59,6 @@ class LLMService:
             )
             
             if response.choices and len(response.choices) > 0:
-                logger.info(response.choices[0].message.content)
                 return response.choices[0].message.content
             else:
                 return "I'm sorry, I couldn't generate a response. Please try again."
