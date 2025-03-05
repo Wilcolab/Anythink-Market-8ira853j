@@ -1,13 +1,12 @@
-from fastapi import APIRouter, Depends, BackgroundTasks, Header, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Optional
 from pydantic import BaseModel
-from app.auth.jwt import get_current_user, User, oauth2_scheme
+from app.auth.jwt import get_current_user, User
 from app.database.db_manager import (
     get_client_data, get_account_balance,
-    get_recent_transactions, get_all_recent_transactions
+    get_recent_transactions
 )
 from app.models.llm_service import LLMService
-from fastapi.security import OAuth2PasswordBearer
 import re
 
 router = APIRouter()
@@ -20,20 +19,6 @@ class QueryRequest(BaseModel):
 
 class QueryResponse(BaseModel):
     response: str
-
-
-async def get_optional_user(authorization: Optional[str] = Header(None)):
-    if not authorization:
-        return None
-
-    try:
-        if authorization.startswith("Bearer "):
-            token = authorization.replace("Bearer ", "")
-            return await get_current_user(token)
-    except HTTPException:
-        return None
-
-    return None
 
 
 @router.post("/secure-query", response_model=QueryResponse)
@@ -53,9 +38,13 @@ async def secure_query(
     return QueryResponse(response=response)
 
 
-async def get_context_for_intent(intent_tag: str, username: str = None) -> str:
+async def get_context_for_intent(intent_tag: str, username: str) -> str:
     if not username:
-        return "Authentication required. Please login to access this information."
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     if intent_tag == "account_balance":
         accounts = await get_account_balance(username)
@@ -63,8 +52,7 @@ async def get_context_for_intent(intent_tag: str, username: str = None) -> str:
             accounts_info = "\n".join(
                 [f"{account['account_type'].capitalize()} account {account['account_number']}: ${account['balance']:.2f}" for account in accounts])
             return f"Account Information:\n{accounts_info}"
-        else:
-            return "No account information available."
+        return "No account information available."
 
     elif intent_tag in ["transaction_history", "spending_analysis"]:
         transactions = await get_recent_transactions(username)
@@ -72,20 +60,8 @@ async def get_context_for_intent(intent_tag: str, username: str = None) -> str:
             trans_info = "\n".join(
                 [f"{t['transaction_date'].split()[0]} - {t['description']} - ${t['amount']:.2f} ({t['transaction_type']})" for t in transactions])
             return f"Recent Transactions for {username}:\n{trans_info}"
-        else:
-            return "No recent transactions found for this user."
+        return "No recent transactions found for this user."
 
     else:
         data_items = await get_client_data(intent_tag) if intent_tag else []
         return "\n\n".join([item['info'] for item in data_items]) if data_items else ""
-
-
-@router.get("/users/me")
-async def get_current_user_info(current_user: Optional[User] = Depends(get_optional_user)):
-    if not current_user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return current_user
