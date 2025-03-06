@@ -47,6 +47,7 @@ class LLMService:
             system_message += f"\nHere is the relevant context for the user:\n{context}"
         
         try:
+            logger.info(query)
             response = self.client.chat.completions.create(
                 model=self.deployment_name,
                 messages=[
