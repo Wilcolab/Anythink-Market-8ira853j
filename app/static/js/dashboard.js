@@ -9,11 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (token) {
     fetchUserInfo(token);
   } else {
-    if (userName) userName.textContent = "Guest";
-    if (logoutBtn) {
-      logoutBtn.textContent = "Login";
-      logoutBtn.setAttribute("href", "/login");
-    }
+    window.location.href = '/login';
   }
 
   if (logoutBtn) {
