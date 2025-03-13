@@ -9,6 +9,7 @@ import {
 } from "../../constants/actionTypes";
 import { getItemAndComments } from "./utils/ItemFetcher";
 import { useParams } from "react-router-dom";
+import RatingSubmission from '../RatingSubmission';
 
 const mapStateToProps = (state) => ({
   ...state.item,
@@ -70,6 +71,9 @@ const Item = (props) => {
           </div>
 
           <div className="row bg-light-gray p-4">
+            <div className="col-12 mb-4">
+              <RatingSubmission slug={params.id} />
+            </div>
             <CommentContainer
               comments={props.comments || []}
               errors={props.commentErrors}
