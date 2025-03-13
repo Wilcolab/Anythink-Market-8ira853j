@@ -1,10 +1,19 @@
-from app.models.common import DateTimeModelMixin, IDModelMixin
+from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
 from app.models.domain.profiles import Profile
-from app.models.domain.rwmodel import RWModel
 
 
-class Rating(IDModelMixin, DateTimeModelMixin, RWModel):
-    value: int  # Rating value (e.g., 1-5)
-    item_slug: str  # The item being rated
-    user: Profile  # User who left the rating
-    comment: str = None  # Optional comment with the rating
+class Rating(BaseModel):
+    id_: int = Field(..., alias="id")
+    value: int
+    item_id: int  
+    user: Profile
+    comment: Optional[str] = ""
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        allow_population_by_field_name = True

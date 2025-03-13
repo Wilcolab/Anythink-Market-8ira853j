@@ -84,12 +84,24 @@ const Profile = {
   unfollow: (username) => requests.del(`/profiles/${username}/follow`),
 };
 
+const Ratings = {
+  create: (slug, ratingData) =>
+    requests.post(`/items/${slug}/ratings`, ratingData),
+  get: slug =>
+    requests.get(`/items/${slug}/ratings`),
+  update: (slug, ratingId, ratingData) =>
+    requests.put(`/items/${slug}/ratings/${ratingId}`, ratingData),
+  delete: (slug, ratingId) =>
+    requests.del(`/items/${slug}/ratings/${ratingId}`),
+};
+
 const agentObj = {
   Items,
   Auth,
   Comments,
   Profile,
   Tags,
+  Ratings,
   setToken: (_token) => {
     token = _token;
   },
