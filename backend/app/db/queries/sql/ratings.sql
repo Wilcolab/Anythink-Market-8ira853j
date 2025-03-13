@@ -92,20 +92,21 @@ RETURNING
 DELETE FROM ratings
 WHERE id = :rating_id AND user_id = (SELECT id FROM users WHERE username = :user_username);
 
--- name: update-item-rating-stats
-WITH rating_stats AS (
-    SELECT 
-        AVG(r.value) as avg_rating,
-        COUNT(r.id) as rating_count
-    FROM ratings r
-    JOIN items i ON r.item_id = i.id
-    WHERE i.slug = :item_slug
-)
+-- name: get-average-rating-for-item
+SELECT 
+    AVG(r.value) as average_rating
+FROM ratings r
+JOIN items i ON r.item_id = i.id
+WHERE i.slug = :item_slug;
+
+-- name: increment-ratings-count
 UPDATE items
-SET 
-    average_rating = rating_stats.avg_rating,
-    ratings_count = rating_stats.rating_count
-FROM rating_stats
+SET ratings_count = ratings_count + 1
+WHERE slug = :item_slug;
+
+-- name: decrement-ratings-count
+UPDATE items
+SET ratings_count = GREATEST(0, ratings_count - 1)
 WHERE slug = :item_slug;
 
 -- name: alter-items-add-rating-columns

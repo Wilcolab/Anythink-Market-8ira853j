@@ -57,6 +57,21 @@ class RatingsRepository(BaseRepository):
             )
             for rating_row in ratings_rows
         ]
+        
+    async def get_average_rating_for_item(
+        self,
+        *,
+        item_slug: str,
+    ) -> Optional[float]:
+        """Calculate the average rating for an item on the fly."""
+        result = await queries.get_average_rating_for_item(
+            self.connection,
+            item_slug=item_slug,
+        )
+        # Fix the way we access the average_rating value from the database record
+        if result and hasattr(result, "average_rating"):
+            return result.average_rating  # Access as attribute instead of dictionary key
+        return None
 
     async def create_rating_for_item(
         self,
@@ -90,8 +105,11 @@ class RatingsRepository(BaseRepository):
             comment=comment,
         )
         
-        # Update item's average rating
-        await self._update_item_rating_stats(item.slug)
+        # Update ratings count (but not average)
+        await queries.increment_ratings_count(
+            self.connection,
+            item_slug=item.slug,
+        )
         
         return await self._get_rating_from_db_record(
             rating_row=rating_row,
@@ -115,9 +133,6 @@ class RatingsRepository(BaseRepository):
             comment=comment,
         )
         
-        # Update item's average rating
-        await self._update_item_rating_stats(rating_row["item_slug"])
-        
         return await self._get_rating_from_db_record(
             rating_row=rating_row,
             user_username=rating_row["user_username"],
@@ -136,8 +151,11 @@ class RatingsRepository(BaseRepository):
             user_username=rating.user.username,
         )
         
-        # Update item's average rating
-        await self._update_item_rating_stats(item_slug)
+        # Decrement the ratings count
+        await queries.decrement_ratings_count(
+            self.connection,
+            item_slug=item_slug,
+        )
 
     async def get_user_rating_for_item(
         self,
@@ -158,17 +176,6 @@ class RatingsRepository(BaseRepository):
             rating_row=rating_row,
             user_username=rating_row["user_username"],
             requested_user=user,
-        )
-
-    async def _update_item_rating_stats(
-        self,
-        *,
-        item_slug: str,
-    ) -> None:
-        """Update the item's average rating and ratings count."""
-        await queries.update_item_rating_stats(
-            self.connection,
-            item_slug=item_slug,
         )
 
     async def _get_rating_from_db_record(
