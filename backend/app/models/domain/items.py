@@ -15,6 +15,6 @@ class Item(IDModelMixin, DateTimeModelMixin, RWModel):
     favorites_count: int
     image: Optional[str]
     body: Optional[str]
-    # Add rating fields
+    # Rating fields - average_rating is calculated on the fly
     average_rating: Optional[float] = None
     ratings_count: int = 0

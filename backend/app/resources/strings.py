@@ -23,3 +23,7 @@ ITEM_IS_NOT_FAVORITED = "item is not favorited"
 COMMENT_DOES_NOT_EXIST = "comment does not exist"
 
 AUTHENTICATION_REQUIRED = "authentication required"
+
+# Ratings
+RATING_DOES_NOT_EXIST = "Rating does not exist"
+USER_IS_NOT_AUTHOR_OF_RATING = "You are not the author of this rating"

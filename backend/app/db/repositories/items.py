@@ -314,6 +314,22 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
         if not len(result_rows):
             raise Exception(f'No item with slug {slug}')
         title = result_rows[0]['title']
+        
+        # Get average rating on the fly
+        from app.db.repositories.ratings import RatingsRepository
+        ratings_repo = RatingsRepository(self.connection)
+        avg_rating = await ratings_repo.get_average_rating_for_item(item_slug=slug)
+        
+        # Get ratings count safely, default to 0 if not present
+        ratings_count = item_row.get("ratings_count", 0)
+        
+        # If ratings_count is not in the record, try to fetch it from the database
+        if "ratings_count" not in item_row:
+            ratings_count_result = await self.connection.fetchrow(
+                "SELECT ratings_count FROM items WHERE slug = $1", slug
+            )
+            if ratings_count_result and "ratings_count" in ratings_count_result:
+                ratings_count = ratings_count_result["ratings_count"]
 
         return Item(
             id_=item_row["id"],
@@ -338,6 +354,8 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
             else False,
             created_at=item_row["created_at"],
             updated_at=item_row["updated_at"],
+            average_rating=avg_rating,
+            ratings_count=ratings_count,
         )
 
     async def _link_item_with_tags(self, *, slug: str, tags: Sequence[str]) -> None:
