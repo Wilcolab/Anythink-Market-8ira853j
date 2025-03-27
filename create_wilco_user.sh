@@ -8,17 +8,18 @@ PROJECT_ID=$(gcloud config get-value project)
 ROLE="roles/owner"
 KEY_FILE_PATH="/tmp/wilco_creds.json"
 
-# Create the service account
+
+echo "Creating the service account"
 gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
   --description="$DESCRIPTION" \
   --display-name="$DISPLAY_NAME"
 
-# Assign the role to the service account
+echo "Assigning the role to the service account"
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="$ROLE"
 
-# Generate the key file for the service account
+echo "Generating the key file for the service account"
 gcloud iam service-accounts keys create $KEY_FILE_PATH \
   --iam-account "${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 
@@ -37,4 +38,4 @@ curl -L -X POST "${ENGINE_EVENT_ENDPOINT}" -H "Content-Type: application/json" -
 
 export GOOGLE_APPLICATION_CREDENTIALS=$KEY_FILE_PATH
 
-echo "Service account created successfully"
+echo "Service account created successfully, you can now go back to chat."
