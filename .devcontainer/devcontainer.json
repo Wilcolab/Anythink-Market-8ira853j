@@ -1,19 +1,4 @@
 {
-  "name": "GCP playground",
-  "image": "mcr.microsoft.com/vscode/devcontainers/python:3",
-  "features": {
-    "ghcr.io/devcontainers/features/sshd:1": {
-      "version": "latest"
-    }
-  },
-  "settings": {
-    "extensions.ignoreRecommendations": true,
-    "workbench.startupEditor": "none",
-    "workbench.colorTheme": "Visual Studio Dark",
-    "workbench.colorCustomizations": {},
-    "workbench.welcomePage.walkthroughs.openOnInstall": false,
-    "workbench.welcomePage.experimental.videoTutorials": "off",
-    "github.codespaces.defaultExtensions": []
-  },
-  "postStartCommand": "bash -c .devcontainer/setup.sh"
+  "name": "Anythink Development Container",
+  "image": "public.ecr.aws/v0a2l7y2/wilco/anythink-devcontainer:latest"
 }
