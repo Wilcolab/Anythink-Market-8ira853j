@@ -1,6 +1,6 @@
 {
   "name": "GCP playground",
-  "image": "mcr.microsoft.com/vscode/devcontainers/python:3",
+  "image": "apache/beam_python3.8_sdk",
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {
       "version": "latest"
