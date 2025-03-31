@@ -1,2 +1,0 @@
-# gcp-playground
-GCP playground 
