@@ -12,13 +12,12 @@ echo "export CODESPACE_BACKEND_URL=\"${CODESPACE_BACKEND_URL}\"" >> ~/.bashrc
 echo "export CODESPACE_WDS_SOCKET_PORT=443" >> ~/.bashrc
 
 # Export welcome prompt in bash:
-echo "printf \"\n\n☁️☁️☁️️ Anythink: Develop in the Cloud ☁️☁️☁️\n\"" >> ~/.bashrc
-echo "printf \"\n\x1b[31m \x1b[1m👉 Type: \\\`docker compose up\\\` to run the project. 👈\n\n\"" >> ~/.bashrc
+echo "printf \"\n\n☁️☁️☁️️ Wilco: Develop in the Cloud ☁️☁️☁️\n\"" >> ~/.bashrc
 
 nohup bash -c "cd /wilco-agent && node agent.js &" >> /tmp/agent.log 2>&1
 
-# Check if docker is installed
-if command -v docker &> /dev/null
-then
-    docker compose pull
-fi
+curl -sL https://get.garden.io/install.sh | bash
+echo "export PATH=\$PATH:~/.garden/bin" >> ~/.bashrc
+
+sudo apt-get update && sudo apt-get install -y xdg-utils
+minikube start
