@@ -1,0 +1,55 @@
+# Learn more about projects at https://docs.garden.io/cedar-0.14/getting-started/basics.md
+# Reference for Garden projects can be found at https://docs.garden.io/cedar-0.14/reference/project-config
+
+apiVersion: garden.io/v2
+kind: Project
+name: web-app-example
+organizationId: e4296e5c-2464-4f3e-a1c8-39ed91a83e1e
+
+defaultEnvironment: local
+
+# Environments typically represent different stages of your development and deployment process.
+environments:
+  # Use this environment to build, develop, and test in your local Kubernetes solution of choice.
+  # Installation instructions and list of supported local Kubernetes environments: https://docs.garden.io/cedar-0.14/kubernetes-plugins/local-k8s/install
+  - name: local
+    defaultNamespace: web-app-example
+
+  # Use this environment to build, develop, and test in remote, production-like environments that scale with your stack.
+  - name: remote-dev
+    # Ensure each user has their own isolated namespace
+    defaultNamespace: web-app-example-${kebabCase(local.username)}
+
+  # Similar to the remote-dev environment but meant for ephemeral test environments. Use this to run tests
+  # in an isolated environment for every PR and every push to the PR.
+  # The namespace is isolated based on the branch name and commit hash.
+  - name: ci
+    # Isolate namespaces by git branch namespace in the staging environment
+    defaultNamespace: web-app-example-${git.branch}-${git.commitHash}
+
+  # Similar to the ci environment but meant for preview/QA environments. Use this to create a preview
+  # environment for every PR that is updated on every push to the PR.
+  # The namespace is isolated based on the branch.
+  - name: preview
+    # Isolate namespaces by git branch namespace in the staging environment
+    defaultNamespace: web-app-example-${git.branch}
+
+# Providers make action types available in your Garden configuration and tell Garden how to connect with your infrastructure.
+# For example the kubernetes and local-kubernetes providers allow you to use the container, helm and kubernetes action types.
+# All available providers and their configuration options are listed in the reference docs: https://docs.garden.io/cedar-0.14/reference/providers
+providers:
+  - name: local-kubernetes
+    environments: [local]
+
+  # To configure the remote kubernetes providers, follow the steps at https://docs.garden.io/cedar-0.14/kubernetes-plugins/remote-k8s
+  # You should have a kubernetes provider for each cluster you use.
+  - name: kubernetes
+    environments: [remote-dev, ci, preview]
+    # context: ...
+
+  - name: container
+    gardenContainerBuilder:
+      enabled: true
+
+# Next step: Define actions to tell Garden how to build, test and deploy your code.
+# You can learn more by going through our 'First Project' tutorial at: https://docs.garden.io/cedar-0.14/tutorials/your-first-project

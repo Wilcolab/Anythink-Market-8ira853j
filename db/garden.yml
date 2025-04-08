@@ -1,0 +1,36 @@
+kind: Deploy
+name: db
+type: helm
+description: Deploy a Postgres Helm chart
+spec:
+  chart:
+    name: postgresql
+    repo: https://charts.bitnami.com/bitnami
+    version: '12.4.2'
+  values:
+    fullnameOverride: postgres
+    global:
+      postgresql:
+        auth:
+          postgresPassword: postgres
+          database: postgres
+    auth:
+      enablePostgresUser: true
+    primary:
+      persistence:
+        enabled: true
+      service:
+        type: ClusterIP
+        ports:
+          postgresql: 5432
+
+---
+kind: Run
+name: db-seed
+type: kubernetes-exec
+dependencies: [deploy.db]
+spec:
+  resource:
+    kind: 'StatefulSet'
+    name: 'postgres'
+  command: [bin/sh, -c, 'PGPASSWORD=postgres psql -U postgres --host=postgres -c "CREATE TABLE IF NOT EXISTS votes (id TEXT PRIMARY KEY, vote CHAR(1), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);"']

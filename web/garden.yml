@@ -1,0 +1,39 @@
+kind: Project
+variables:
+  test1: effective-dollop-4qqpx74x943q77p
+  test2: https://app.github.dev
+environments:
+  - name: local
+    variables:
+      CODESPACE_NAME: effective-dollop-4qqpx74x943q77p
+      GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: https://app.github.dev
+---
+
+kind: Build
+name: web
+type: container
+description: Build the Web image
+spec:
+  dockerfile: Dockerfile
+  publishId: minikube-web
+
+---
+kind: Deploy
+name: web
+type: kubernetes
+dependencies: [build.web, deploy.api]
+spec:
+  manifestFiles: [./manifests/*]
+  defaultTarget:
+    kind: Deployment
+    name: web
+  patchResources:
+    - name: web
+      kind: Deployment
+      patch:
+        spec:
+          template:
+            spec:
+              containers:
+                - name: web
+                  image: ${actions.build.web.outputs.deploymentImageId}

@@ -1,0 +1,30 @@
+kind: Build
+name: api
+type: container
+description: Build the API image
+spec:
+  dockerfile: Dockerfile
+  publishId: minikube-api
+
+---
+kind: Deploy
+name: api
+type: kubernetes
+description: Deploy the API
+dependencies: [build.api, run.db-seed]
+spec:
+  manifestFiles: [./manifests/*]
+  defaultTarget:
+    kind: Deployment
+    name: api
+  patchResources:
+    - name: api
+      kind: Deployment
+      patch:
+        spec:
+          template:
+            spec:
+              containers:
+                - name: api
+                  image: ${actions.build.api.outputs.deploymentImageId}
+                  imagePullPolicy: Never
