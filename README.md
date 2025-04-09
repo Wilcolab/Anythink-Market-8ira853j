@@ -1,51 +1,111 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-production-user-asset-6210df.s3.amazonaws.com/658727/272340510-34957be5-7318-4473-8141-2751ca571c4f.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://github-production-user-asset-6210df.s3.amazonaws.com/658727/272340472-ad8d7a46-ef85-47ea-9129-d815206ed2f6.png">
-    <img alt="Garden" src="https://github-production-user-asset-6210df.s3.amazonaws.com/658727/272340472-ad8d7a46-ef85-47ea-9129-d815206ed2f6.png">
-  </picture>
-</p>
-<div align="center">
-  <a href="https://garden.io/?utm_source=github-web-app-example">Website</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://docs.garden.io/?utm_source=github-web-app-example">Docs</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://github.com/garden-io/garden/tree/0.13.21/examples">Examples</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://garden.io/blog/?utm_source=github-web-app-example">Blog</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://go.garden.io/discord">Discord</a>
-</div>
+# Drivenets Router Management Application
 
-## Welcome to Garden's Three Tier Web App Example 👋
+This project consists of a React frontend application and a mock backend server using json-server for the Drivenets Router Management interview application.
 
-This repository contains the three tier web app that's used in the ['Your First Project' tutorial](https://docs.garden.io/tutorials/your-first-project) from our documentation.
+## Description
 
-- If you're coming from the tutorial, checkout out to the [`tutorial-start`](https://github.com/garden-io/web-app-example/tree/tutorial-start) branch to follow along.
-- If you're coming from the tutorial but can't wait to see the end result, checkout out to the [`tutorial-complete`](https://github.com/garden-io/web-app-example/tree/tutorial-complete) branch.
+The Drivenets Router Management Backend is a simple REST API server that simulates a backend for router management operations. It uses json-server to provide a fully functioning REST API based on a JSON file that serves as the database.
 
-If you see any issues or bugs, kindly report them to the [main Garden repo](https://github.com/garden-io/garden/issues/new).
+## Prerequisites
 
-## About the project
+- Node.js (v14 or higher)
+- npm (v6 or higher)
 
-The project is a simplified version of the microservice voting application you'll find in various Garden examples. Garden is typically used in projects that have multiple microservices but
-sometimes its better to keep things simple and here we have a three-tier web app version with API, web and database components.
+## Installation & Setup
 
-### Garden Providers
+1. Install backend dependencies:
 
-The `main` branch uses the `local-kubernetes` provider. The [tutorial from our documentation](https://docs.garden.io/tutorials/your-first-project) however goes into more detail and discusses the different options for deploying the project to Kubernetes.
+```bash
+cd backend
+npm install
+```
 
-### Garden Actions
+2. Install frontend dependencies:
 
-The project is a voting application with the following components:
+```bash
+cd frontend
+npm install
+```
 
-- `web` — A frontend Vue application
-- `api` — A Python API server
-- `db` — A Postgres database
+## Running the Application
 
-These services are built, deployed, and tested with [Garden actions](https://docs.garden.io/overview/core-concepts#action).
+1. Start the backend server:
 
-Specifically, the `api` and `web` components have their own Kubernetes manifests so we use the `container` Build action to build them
-and the `kubernetes` Deploy action to deploy them.
+```bash
+cd backend
+npm start
+```
 
-The `db` component is an "off the shelf" Postgres Helm chart that's deployed via the `helm` Deploy action.
+The API will be available at port 3001
+
+2. In a new terminal, start the frontend application:
+
+```bash
+cd frontend
+npm start
+```
+
+The frontend will be available at port 3000
+
+### API Endpoints
+
+RESTful routes for the routers are available at `/routers`.
+
+for example:
+
+```json
+[
+  {
+    "id": "r-000001",
+    "name": "Regional Gateway",
+    "type": "enterprise",
+    "createdAt": "2022-10-15T09:34:33.000Z",
+    "updatedAt": "2023-06-01T07:55:51.774Z",
+    "coordinates": {
+      "latitude": 80.9654,
+      "longitude": -13.3508
+    },
+    "portCount": 127,
+    "supportedProtocols": ["RIP", "BGP", "HSRP", "LISP", "OSPF", "PIM"],
+    "throughputGbps": 40
+  },
+  {
+    "id": "r-000003",
+    "name": "Personal WiFi",
+    "type": "home",
+    "createdAt": "2022-10-08T23:48:06.000Z",
+    "updatedAt": "2024-12-12T17:39:43.240Z",
+    "coordinates": {
+      "latitude": -25.842,
+      "longitude": 54.3554
+    },
+    "connectedDevices": 25,
+    "parentalControlsEnabled": false,
+    "maxBandwidthMbps": 1000
+  },
+  {
+    "id": "r-000006",
+    "name": "High-Speed Access Point",
+    "type": "wifi",
+    "createdAt": "2022-01-08T07:06:11.000Z",
+    "updatedAt": "2024-04-28T21:52:28.723Z",
+    "coordinates": {
+      "latitude": -38.3813,
+      "longitude": 156.3821
+    },
+    "wifiChannels": [4, 20, 33, 16],
+    "supportsDualBand": true
+  }
+]
+```
+
+You would have the following endpoints:
+
+- `GET /routers` - Get all routers
+- `GET /routers/1` - Get router with id 1
+- `POST /routers` - Create a new router
+- `PUT /routers/1` - Update router with id 1
+- `PATCH /routers/1` - Partially update router with id 1
+- `DELETE /routers/1` - Delete router with id 1
+
+Similar endpoints would be available for interfaces.
