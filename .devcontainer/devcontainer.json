@@ -1,7 +1,0 @@
-{
-  "name": "Wilco",
-  "image": "public.ecr.aws/v0a2l7y2/wilco/anythink-devcontainer:latest",
-    "features": {
-        "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {}
-    }
-}
