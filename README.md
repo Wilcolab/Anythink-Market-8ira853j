@@ -1,6 +1,6 @@
-# Drivenets Router Management Backend
+# Drivenets Router Management Application
 
-This project provides a mock backend server for the Drivenets Router Management interview application using json-server.
+This project consists of a React frontend application and a mock backend server using json-server for the Drivenets Router Management interview application.
 
 ## Description
 
@@ -11,36 +11,45 @@ The Drivenets Router Management Backend is a simple REST API server that simulat
 - Node.js (v14 or higher)
 - npm (v6 or higher)
 
-## Installation
+## Installation & Setup
 
-1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/drivenets-router-management-be.git
-cd drivenets-router-management-be
-```
-
-2. Install dependencies:
+1. Install backend dependencies:
 
 ```bash
+cd backend
 npm install
 ```
 
-## Usage
-
-### Starting the server
-
-To start the mock backend server:
+2. Install frontend dependencies:
 
 ```bash
+cd frontend
+npm install
+```
+
+## Running the Application
+
+1. Start the backend server:
+
+```bash
+cd backend
 npm start
 ```
 
-This will start the server on port 3001. The API will be available at `http://localhost:3001`.
+The API will be available at port 3001
+
+2. In a new terminal, start the frontend application:
+
+```bash
+cd frontend
+npm start
+```
+
+The frontend will be available at port 3000
 
 ### API Endpoints
 
-RESTful routes for the routers are available at `http://localhost:3001/routers`.
+RESTful routes for the routers are available at `/routers`.
 
 for example:
 
