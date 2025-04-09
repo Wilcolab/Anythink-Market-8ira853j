@@ -29,7 +29,6 @@ const RouterList: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchRouters();
     }, []);
 
