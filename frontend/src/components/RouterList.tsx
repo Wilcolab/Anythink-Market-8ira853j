@@ -17,7 +17,7 @@ const RouterList: React.FC = () => {
         const fetchRouters = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch('/routers');
+                const response = await fetch('https://glorious-space-giggle-777jg9qqpr3p6gv-3001.app.github.dev/routers');
 
                 if (!response.ok) {
                     throw new Error(`Error: ${response.status}`);
