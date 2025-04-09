@@ -34,6 +34,7 @@
 }
 
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -85,4 +86,86 @@
   background: linear-gradient(90deg, var(--dn-blue), var(--dn-light-blue));
   margin: 2rem auto;
   border-radius: 2px;
+}
+
+/* Router List Styles */
+.router-list-container {
+  margin: 2rem 0;
+}
+
+.router-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.router-item {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.router-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.router-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.router-name {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.router-type {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.router-updated {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error-message {
+  background-color: #fff0f0;
+  border-left: 4px solid #ff3333;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.error-message h3 {
+  margin-top: 0;
+  color: #cc0000;
+}
+
+.error-message button {
+  background-color: #cc0000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.error-message button:hover {
+  background-color: #aa0000;
 }
