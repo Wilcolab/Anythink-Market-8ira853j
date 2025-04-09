@@ -15,3 +15,10 @@ echo "export CODESPACE_WDS_SOCKET_PORT=443" >> ~/.bashrc
 echo "printf \"\n\n☁️☁️☁️️ Wilco: Develop in the Cloud ☁️☁️☁️\n\"" >> ~/.bashrc
 
 nohup bash -c "cd /wilco-agent && node agent.js &" >> /tmp/agent.log 2>&1
+
+curl -sL https://get.garden.io/install.sh | bash
+echo "export PATH=\$PATH:~/.garden/bin" >> ~/.bashrc
+
+sudo apt-get update && sudo apt-get install -y xdg-utils
+minikube start
+echo "eval $(minikube docker-env)" >> ~/.bashrc
