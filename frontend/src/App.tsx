@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import RouterList from './components/RouterList';
-
+import RouterDetail from './components/RouterDetail';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +21,9 @@ const App: React.FC = () => {
                   <h2>Network Routers</h2>
                   <RouterList />
                 </div>
+              </Route>
+              <Route path="/router/:id">
+                <RouterDetail />
               </Route>
             </Switch>
           </div>

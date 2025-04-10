@@ -51,6 +51,8 @@ interface Router {
 
 const Routers = {
     getAll: (): Promise<Router[]> => requests.get('/routers'),
+    getById: (id: string): Promise<Router | undefined> =>
+        requests.get('/routers').then((routers: Router[]) => routers.find((r: Router) => r.id === id))
 };
 
 const agent = {

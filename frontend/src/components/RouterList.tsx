@@ -1,79 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import agent from '../agent';
+import { Link } from 'react-router-dom';
+import { Router } from '../services/RouterService';
+import agent from '../agent'; // Import the agent for API calls
 import './RouterList.css';
-
-// Define interface for router data structure
-interface Router {
-    id: string;
-    name: string;
-    type: string;
-    updatedAt: string;
-}
 
 const RouterList: React.FC = () => {
     const [routers, setRouters] = useState<Router[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchRouters = async (): Promise<void> => {
-            try {
-                setLoading(true);
-                const response = await agent.Routers.getAll();
-                setRouters(response);
-                setError(null);
-            } catch (err) {
-                console.error('Failed to fetch routers:', err);
-                setError('Failed to load routers. Please try again later.');
-            } finally {
+        // Use the agent to fetch routers instead of the direct service
+        agent.Routers.getAll()
+            .then(data => {
+                // Use type assertion to tell TypeScript this data matches our Router type
+                setRouters(data as unknown as Router[]);
                 setLoading(false);
-            }
-        };
-
-        fetchRouters();
+            })
+            .catch(error => {
+                console.error("Error fetching routers:", error);
+                setLoading(false);
+            });
     }, []);
 
-    // Format timestamp to a readable format
-    const formatTimestamp = (timestamp: string): string => {
-        if (!timestamp) return 'N/A';
-        try {
-            return format(new Date(timestamp), 'MMM dd, yyyy HH:mm');
-        } catch (e) {
-            return 'Invalid date';
-        }
-    };
+    if (loading) return <div className="loading">Loading routers...</div>;
 
-    if (loading) {
-        return <div className="router-list-loading">Loading routers...</div>;
-    }
-
-    if (error) {
-        return <div className="router-list-error">{error}</div>;
+    if (!routers || routers.length === 0) {
+        return <p>No routers found</p>;
     }
 
     return (
         <div className="router-list-container">
             <h2>Router List</h2>
-            {!routers || routers.length === 0 ? (
-                <p>No routers found</p>
-            ) : (
-                <ul className="router-list">
-                    {routers.map((router) => (
-                        <li key={router?.id || Math.random().toString()} className="router-item">
-                            <div className="router-name">
-                                <strong>Name:</strong> {router?.name || 'Unnamed Router'}
-                            </div>
-                            <div className="router-type">
-                                <strong>Type:</strong> {router?.type || 'Unspecified'}
-                            </div>
-                            <div className="router-updated">
-                                <strong>Last Updated:</strong> {formatTimestamp(router?.updatedAt)}
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <ul className="router-list">
+                {routers.map((router) => (
+                    <li key={router?.id || Math.random().toString()} className="router-item">
+                        <div className="router-name">
+                            <strong>Name:</strong> <Link to={`/router/${router.id}`} className="router-link">{router?.name || 'Unnamed Router'}</Link>
+                        </div>
+                        <div className="router-type">
+                            <strong>Type:</strong> {router?.type || 'Unspecified'}
+                        </div>
+                        <div className="router-updated">
+                            <strong>Last Updated:</strong> {router?.updatedAt}
+                        </div>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };
