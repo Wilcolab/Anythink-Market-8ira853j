@@ -21,5 +21,6 @@
       "requireLocalPort": true,
       "onAutoForward": "silent"
     }
-  }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh"
 }
