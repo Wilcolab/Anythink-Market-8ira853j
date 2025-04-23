@@ -1,0 +1,49 @@
+id: integrate_data_into_bigquery
+learningObjectives:
+  - Write aggregated data to BigQuery.
+hints:
+  - Ensure the [new table schema](https://cloud.google.com/bigquery/docs/schemas) matches the aggregated data structure.
+  - Validate data integrity after loading into BigQuery.
+  - "For more information on creating custom `beam.ParDo`, visit: https://beam.apache.org/documentation/programming-guide/#pardo"
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: lucca
+        messages:
+          - text: Now comes the crucial part of our data pipeline! We will process and aggregate earthquake data per region.
+          - text: This step involves creating your own `beam.ParDo` and `SumCounts` to aggregate the data.
+          - text: Aggregated data helps us understand which regions are most affected by earthquakes, enabling better preparedness and resource allocation.
+          - text: Once the data is aggregated, write it into a new BigQuery table called `events_count`.
+          - text: Finally, load the data into BigQuery.
+          - text: Let's dive in and see which region has the most earthquake events!
+          - text: :instruction[Using DataFlow functions, aggregate the earthquake data per region and write the results to BigQuery]
+          - text: Once you're done, please tell me the region name that has the most earthquake events.
+          - text: "For more information on BigQuery, [visit here](https://cloud.google.com/bigquery/docs) "
+trigger:
+  type: user_message
+  flowNode:
+    if:
+      conditions:
+        - conditionId: text_match_regex
+          params:
+            text: "${userMessageText}"
+            regex: "Los Angeles"
+            flags: "i"
+      then:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "![](https://i.giphy.com/L3EeenkqvFVZjweINc.gif)"
+                - text: Bingo! Los Angeles has the most earthquake events. Looks like I'll need to prepare for a lot of shaking in the future!
+                - text: Congratulations on completing this step! You've done an excellent job processing and aggregating the earthquake data. Your efforts will help in better understanding and preparing for earthquake events. Keep up the great work!
+          - actionId: finish_step
+      else:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "Hmm, that's not quite right. Give it another shot!"

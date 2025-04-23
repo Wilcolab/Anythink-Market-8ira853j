@@ -1,0 +1,28 @@
+id: configure_gsutil_cli
+learningObjectives:
+  - Install and configure the Google Cloud SDK with user credentials.
+hints:
+  - Use `gcloud init` to configure the Google Cloud SDK.
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: lucca
+        messages:
+          - text: "Let's configure the Google CLI for our mission."
+          - text: "Go to [Google Storage section](https://console.cloud.google.com/storage/browse), select your project from the project dropdown (on the top left of the page) and copy the project ID."
+          - text: ":instruction[Open your terminal in codespace and run `gcloud init --project <PROJECT_ID>`] and follow the sign-in process in the browser."
+          - text: "Let me know when you're done."
+          - text: "If you want to read more, you can refer to the [Google Cloud Storage documentation](https://cloud.google.com/storage/docs)."
+    - actionId: ready_message
+      params:
+        person: lucca
+trigger:
+  type: user_ready_response
+  flowNode:
+    do:
+      - actionId: store_user_property
+        params:
+          name: gcp_sidebar
+          value: "https://console.cloud.google.com"
+      - actionId: finish_step

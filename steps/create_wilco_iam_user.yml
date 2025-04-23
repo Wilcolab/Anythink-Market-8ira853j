@@ -1,0 +1,51 @@
+id: create_wilco_iam_user
+learningObjectives:
+  - Create a new IAM user with API access.
+hints:
+  - Make sure you ran the script correctly
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: lucca
+        messages:
+          - text: "Now that we have our Google Cloud CLI ready, we need permission to verify your changes. Let's use the provided script to create an IAM user named 'Wilco'. This will help us with our checks."
+          - text: ":instruction[Open your Codespace terminal and run the following command: `source ./create_wilco_user.sh`]."
+trigger:
+  type: user_event
+  params:
+    event: gcp_service_account_created
+  flowNode:
+    if:
+      conditions:
+        - conditionId: gcp_can_access_buckets
+          name: credentials_test
+          params:
+            credentials: "${eventMetadata.credentials}"
+      then:
+        do:
+          - actionId: user_set_integration_property
+            params:
+              integration: gcp
+              key: credentials
+              value: "${eventMetadata.credentials}"
+
+          - actionId: user_set_integration_property
+            params:
+              integration: gcp
+              key: project_id
+              value: "${eventMetadata.project_id}"
+
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "The credentials you sent me look good! We are ready to move on to the next step!"
+          - actionId: finish_step
+      else:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "That's not correct, we received an error: `${outputs.credentials_test.error}`. Try again!"

@@ -1,0 +1,64 @@
+id: prepare_analytical_environment
+learningObjectives:
+  - Understand the importance of using GCP buckets for large data files.
+hints:
+  - Ensure you have the necessary permissions in GCP to enable APIs.
+  - Use the GCP console or gsutil to upload files to a bucket.
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: lucca
+        messages:
+          - text: Now that we finished with our setup, let the fun begin!
+          - text: Welcome to SeisAnalytics, fellow data voyager!
+          - text: "![](https://i.giphy.com/xT5LMuRbEiz9ZuhMME.gif)"
+          - text:
+              Today, we need to process seismic data to identify the most affected regions by seismic activities.
+              By analyzing this data, we can gain insights into which areas are most prone to earthquakes and
+              take necessary precautions or actions.
+          - text:
+              "We have a large CSV file named [earthquake_data.csv](${earthquake_data.csv}) containing all the seismic analysis.
+              This raw data is too big to process directly, so we'll use GCP Dataflow to handle it.
+              The first step is to upload this file to a GCP bucket. This allows us to efficiently
+              manage and process large datasets."
+          - text:
+              :instruction[Please create a GCP bucket named '${user.repoName.toLowerCase()}'] if it doesn't already exist, and upload 'earthquake_data.csv' to it.
+              Let us know here once it's done so we can proceed with the next steps.
+          - text: Let me know once you've completed the upload, and I'll verify that everything is set up correctly.   
+    - actionId: ready_message
+      params:
+        person: lucca
+trigger:
+  type: user_ready_response
+  flowNode:
+    do:
+      - actionId: gcp_api_request
+        name: gcp_file_exists
+        params:
+          path: "/storage/v1/b/${user.repoName.toLowerCase()}/o/earthquake_data.csv"
+    if:
+      conditions:
+        - conditionId: text_contains_strings
+          params:
+            text: ${outputs.gcp_file_exists?.data?.id}
+            strings:
+              - earthquake_data
+      then:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "Great job! The file has been successfully uploaded to the bucket."
+          - actionId: finish_step
+      else:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "Couldn't find the file in the bucket. Please ensure you've uploaded 'earthquake_data.csv' to the bucket."
+          - actionId: ready_message
+            params:
+              person: lucca

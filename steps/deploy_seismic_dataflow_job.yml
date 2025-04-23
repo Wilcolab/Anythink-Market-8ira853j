@@ -1,0 +1,54 @@
+id: deploy_seismic_dataflow_job
+learningObjectives:
+  - Deploy and monitor the Dataflow job for real-time seismic data processing.
+hints:
+  - Use the GCP Console for a guided deployment experience if you're new to the CLI. [GCP Console](https://console.cloud.google.com/)
+  - Refer to GCP's monitoring documentation to familiarize yourself with tracking tools. [GCP Monitoring Documentation](https://cloud.google.com/monitoring/docs)
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: lucca
+        messages:
+          - text: Time to unleash the data torrent! Deploy your data pipeline through the CLI.
+          - text: We're deploying this Dataflow job to process real-time seismic data, transforming raw readings into actionable insights.
+          - text: "To deploy, :instruction[use the command: `python <PYTHON_SCRIPT.py> --runner DataflowRunner --project <PROJECT> --temp_location <TMP_BUCKET_PATH> --staging_location <STAGING_BUCKET_PATH> --region <REGION>`]"
+          - text: A Dataflow job is a pipeline that reads data from a source, processes it, and writes it to a sink. It's essential for real-time data processing.
+          - text: Use the GCP web console to monitor the job's performance and data transformation velocity.
+          - text: Update the team (me) through our server with job deployment status and initial logs.
+          - text: Once you're done, please let us know so we can check the results.
+    - actionId: ready_message
+      params:
+        person: lucca
+
+trigger:
+  type: user_ready_response
+  flowNode:
+    do:
+      - actionId: gcp_api_request
+        name: gcp_db_data
+        params:
+          path: "bigquery/v2/projects/${user.integrations.gcp.project_id}/datasets/${user.repoName.toLowerCase().replaceAll('-','_')}/tables/data"
+    if:
+      conditions:
+        - conditionId: is_truthy
+          params:
+            value: ${outputs.gcp_db_exists.data?.numRows > 0}
+      then:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "Fantastic! 🎉 The data table is populated and ready for action. 🚀"
+          - actionId: finish_step
+      else:
+        do:
+          - actionId: bot_message
+            params:
+              person: lucca
+              messages:
+                - text: "The data table is empty. Let's deploy the Dataflow job to populate it and let me know when you're ready."
+          - actionId: ready_message
+            params:
+              person: lucca

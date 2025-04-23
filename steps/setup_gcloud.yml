@@ -1,0 +1,25 @@
+id: setup_gcloud
+learningObjectives:
+  - Create a google cloud account
+startFlow:
+  do:
+    - actionId: bot_message
+      params:
+        person: lucca
+        messages:
+          - text: "Welcome! I'm Lucca, your guide. Let's learn the basics of Google Cloud Platform, also known as GCP."
+          - text: "To get started you need a Google Cloud account. You can use your existing account, or [create one here for free](https://cloud.google.com/free)."
+          - text: "Once you have your account set up, :instruction[create a new project in the Google Cloud Console called 'Wilco'.]"
+          - text: "Let me know once you finish setting up your Google Cloud account so we can continue."
+    - actionId: ready_message
+      params:
+        person: lucca
+trigger:
+  type: user_ready_response
+  flowNode:
+    do:
+      - actionId: store_user_property
+        params:
+          name: gcp_sidebar
+          value: "https://console.cloud.google.com"    
+      - actionId: finish_step
