@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from .schema import Workflow, Step, Task, TaskStatus, ExecutionMode
 from .redis_service import RedisService
+from .resilience import CircuitBreaker, with_retry
 import tasks
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,11 @@ class WorkflowEngine:
             "task_c": tasks.task_c
         }
         self._running_tasks: Dict[str, Dict[str, asyncio.Task]] = {}
+        # Initialize circuit breakers for each task
+        self._circuit_breakers: Dict[str, CircuitBreaker] = {
+            task_id: CircuitBreaker(failure_threshold=5, reset_timeout=60)
+            for task_id in self._task_registry.keys()
+        }
 
     async def execute_workflow(self, workflow: Workflow) -> str:
         """
@@ -119,7 +125,7 @@ class WorkflowEngine:
                     dep_result = self.redis.get_task_result(run_id, dep)
                     if not dep_result or dep_result["status"] != "completed":
                         await self._store_task_status(run_id, task, "skipped",
-                                                      error="Dependencies not met")
+                                                    error="Dependencies not met")
                         return False
 
             await self._store_task_status(run_id, task, "running")
@@ -129,11 +135,16 @@ class WorkflowEngine:
             if not task_func:
                 raise ValueError(f"Task {task.task_id} not found in registry")
 
-            # Execute task
-            if asyncio.iscoroutinefunction(task_func):
-                result = await task_func(**(task.parameters or {}))
-            else:
-                result = task_func(**(task.parameters or {}))
+            # Execute task with retry and circuit breaker
+            result = await with_retry(
+                task_func,
+                max_retries=3,  # Configurable
+                initial_delay=1.0,  # Start with 1 second delay
+                max_delay=30.0,  # Cap at 30 seconds
+                exponential_base=2.0,  # Double the delay each time
+                circuit_breaker=self._circuit_breakers[task.task_id],
+                **(task.parameters or {})
+            )
 
             await self._store_task_status(run_id, task, "completed", result=result)
             return True
