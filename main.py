@@ -38,7 +38,10 @@ FILTERS = {
     "brightness": "Increase brightness",
     "contrast": "Increase contrast",
     "invert": "Invert colors",
-    "sepia": "Sepia tone effect"
+    "sepia": "Sepia tone effect",
+    "black_white": "Black & White",
+    "vintage": "Vintage effect",
+    "glitch": "Glitch effect"
 }
 
 @app.get("/", response_class=HTMLResponse)
@@ -161,26 +164,26 @@ async def api_apply_filter(
         rgb_img = img.convert('RGB')
         width, height = rgb_img.size
         pixels = rgb_img.load()
-        
         for py in range(height):
             for px in range(width):
                 r, g, b = rgb_img.getpixel((px, py))
-                
                 tr = int(0.393 * r + 0.769 * g + 0.189 * b)
                 tg = int(0.349 * r + 0.686 * g + 0.168 * b)
                 tb = int(0.272 * r + 0.534 * g + 0.131 * b)
-                
-                # Ensure values don't exceed 255
                 if tr > 255:
                     tr = 255
                 if tg > 255:
                     tg = 255
                 if tb > 255:
                     tb = 255
-                    
                 pixels[px, py] = (tr, tg, tb)
-        
         filtered_img = rgb_img
+    elif selected_filter == "black_white":
+        filtered_img = img.convert("1").convert("RGB")
+    elif selected_filter == "vintage":
+        filtered_img = apply_vintage_filter(img)
+    elif selected_filter == "glitch":
+        filtered_img = apply_glitch_effect(img)
     else:
         # No filter or unknown filter
         filtered_img = img
@@ -221,6 +224,56 @@ async def download_image(
             "Content-Disposition": f'attachment; filename="{filename}"'
         }
     )
+
+def apply_vintage_filter(img):
+    """
+    Applies a vintage effect to the image by combining sepia tone and reduced contrast.
+    Args:
+        img (PIL.Image): The input image.
+    Returns:
+        PIL.Image: The vintage-styled image.
+    """
+    sepia_img = img.convert('RGB')
+    width, height = sepia_img.size
+    pixels = sepia_img.load()
+    for py in range(height):
+        for px in range(width):
+            r, g, b = sepia_img.getpixel((px, py))
+            tr = int(0.393 * r + 0.769 * g + 0.189 * b)
+            tg = int(0.349 * r + 0.686 * g + 0.168 * b)
+            tb = int(0.272 * r + 0.534 * g + 0.131 * b)
+            if tr > 255:
+                tr = 255
+            if tg > 255:
+                tg = 255
+            if tb > 255:
+                tb = 255
+            pixels[px, py] = (tr, tg, tb)
+    enhancer = ImageEnhance.Contrast(sepia_img)
+    vintage_img = enhancer.enhance(0.8)
+    enhancer = ImageEnhance.Brightness(vintage_img)
+    vintage_img = enhancer.enhance(1.1)
+    return vintage_img
+
+def apply_glitch_effect(img):
+    """
+    Applies a simple glitch effect by shifting RGB channels and adding noise.
+    Args:
+        img (PIL.Image): The input image.
+    Returns:
+        PIL.Image: The glitched image.
+    """
+    import random
+    import numpy as np
+    img = img.convert('RGB')
+    arr = np.array(img)
+    shift = random.randint(5, 20)
+    arr_glitch = arr.copy()
+    arr_glitch[:, :, 0] = np.roll(arr[:, :, 0], shift, axis=1)
+    arr_glitch[:, :, 1] = np.roll(arr[:, :, 1], -shift, axis=0)
+    noise = np.random.randint(0, 30, arr.shape, dtype='uint8')
+    arr_glitch = np.clip(arr_glitch + noise, 0, 255)
+    return Image.fromarray(arr_glitch.astype('uint8'), 'RGB')
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=31337, reload=True) 
