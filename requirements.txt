@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 pytest
+pytest-asyncio
 redis
 pydantic>=2.0.0
