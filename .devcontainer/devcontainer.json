@@ -1,10 +1,19 @@
 {
   "name": "MongoDB Development Container",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "image": "public.ecr.aws/v0a2l7y2/wilco/anythink-devcontainer:latest",
+  "forwardPorts": [27017, 3009],
+  "portsAttributes": {
+      "3009": {
+      "label": "Wilco Agent",
+      "elevateIfNeeded": true,
+      "requireLocalPort": true,
+      "onAutoForward": "silent"
+      }
+  },
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {}
   },
-  "forwardPorts": [27017],
   "postCreateCommand": ".devcontainer/setup.sh",
   "remoteUser": "vscode"
 }
