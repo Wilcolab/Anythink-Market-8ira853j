@@ -1,0 +1,17 @@
+let authorDocuments = [
+  {_id: 20, name: "Mary Shelley", sanitizedName: "maryshelley", bio: "Mary Shelley (1797-1851) Mary Shelley was an English novelist best known for her Gothic masterpiece Frankenstein; or, The Modern Prometheus, and for her profound influence on science fiction and horror literature.", aliases: ["Mary Wollstonecraft Shelley"]},
+  {_id: 21, name: "J.R.R. Tolkien", sanitizedName: "jrrtolkien", bio: "J.R.R. Tolkien (1892-1973) J.R.R. Tolkien was an English writer, poet, philologist, and university professor, best known as the author of the classic high fantasy works The Hobbit, The Lord of the Rings, and The Silmarillion.", aliases: ["John Ronald Reuel Tolkien", "JRR Tolkien"]},
+  {_id: 22, name: "Michael Crichton", sanitizedName: "michaelcrichton", bio: "John Michael Crichton (; October 23, 1942 – November 4, 2008) was an American writer and filmmaker. His books have sold over 200 million copies worldwide, and over a dozen have been adapted into films.", aliases: ["Michael Crichton", "Crichton, Michael"]},
+  {_id: 23, name: "Eleanor Cooney", sanitizedName: "eleanorcooney", bio: "Eleanor Cooney is an American author and artist. She has written several books, including The Court of the Lion, Death in Slow Motion, and The Mountaintop School for Dogs and Other Second Chances.", aliases: ["Cooney, Eleanor"]},
+  {_id: 24, name: "Barbara Kingsolver", sanitizedName: "barbarakingsolver", bio: "Barbara Kingsolver (born April 8, 1955) is a Pulitzer Prize winning American novelist, essayist and poet.", aliases: ["Kingsolver, Barbara", "Barbara Kingsolver"]},
+  {_id: 25, name: "Thomas Hardy", sanitizedName: "thomashardy", bio: "Thomas Hardy  (2 June 1840 – 11 January 1928) was an English novelist and poet. A Victorian realist in the tradition of George Eliot, he was influenced both in his novels and in his poetry by Romanticism, including the poetry of William Wordsworth", aliases: ["Thomas Hardy", "Hardy, Thomas", "THOMAS HARDY", "thomas hardy"]}
+];
+
+let bookDocuments = [
+  {_id: "0000800883", author_id: 20, title: "Frankenstein", pages: 311, year: 1818, synopsis: "Mary Shelley's 1818 Gothic masterpiece in which a scientist creates a living being from dead body parts.", amount: 14.99},
+  {_id: "0000800824", author_id: 20, title: "The Last Man", pages: 365, year: 1826, synopsis: "Mary Shelley's apocalyptic science fiction novel set in the late 21st century.", amount: 12.99},
+  {_id: "0000800825", author_id: 22, title: "Jurassic Park", pages: 399, year: 1990, synopsis: "Michael Crichton's 1990 science fiction novel about a theme park of cloned dinosaurs.", amount: 14.99},
+  {_id: "0000800826", author_id: 23, title: "The Mountaintop School for Dogs and Other Second Chances", pages: 288, year: 2003, synopsis: "Eleanor Cooney's 2003 novel about a sanctuary for dogs and the people who care for them.", amount: 13.99},
+  {_id: "0000800827", author_id: 24, title: "The Poisonwood Bible", pages: 546, year: 1998, synopsis: "Barbara Kingsolver's 1998 novel about a missionary family in the Congo.", amount: 15.99},
+  {_id: "0000800828", author_id: 25, title: "Far from the Madding Crowd", pages: 433, year: 1874, synopsis: "Thomas Hardy's 1874 novel about a headstrong young woman and her three suitors.", amount: 10.99}
+];
