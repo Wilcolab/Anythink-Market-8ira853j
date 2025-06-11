@@ -60,13 +60,19 @@ class LLMService:
             )
 
             if response.choices and len(response.choices) > 0:
-                return response.choices[0].message.content
+                llm_response = response.choices[0].message.content
+                logger.info(f"LLM response: {llm_response}")
+                return llm_response
             else:
-                return "I'm sorry, I couldn't generate a response. Please try again."
+                fallback_response = "I'm sorry, I couldn't generate a response. Please try again."
+                logger.info(f"LLM response: {fallback_response}")
+                return fallback_response
 
         except Exception as e:
-            print(f"Error generating response: {str(e)}")
-            return f"I'm sorry, there was an error processing your request: {str(e)}"
+            error_response = f"I'm sorry, there was an error processing your request: {str(e)}"
+            logger.error(f"Error generating response: {str(e)}")
+            logger.info(f"LLM response: {error_response}")
+            return error_response
 
     def classify_intent(self, query, candidate_labels):
         """Classify the intent of the user query using Azure OpenAI"""
@@ -85,6 +91,7 @@ class LLMService:
 
             if response.choices and len(response.choices) > 0:
                 classification = response.choices[0].message.content.strip()
+                logger.info(f"LLM response: {classification}")
 
                 best_label = None
                 for label in candidate_labels:
@@ -100,7 +107,7 @@ class LLMService:
             else:
                 return None
         except Exception as e:
-            print(f"Error classifying intent: {str(e)}")
+            logger.error(f"Error classifying intent: {str(e)}")
             return None
 
     def sanitize_user_input(self, user_input):
@@ -125,10 +132,12 @@ class LLMService:
             query = self.sanitize_user_input(query)
             result = self.classify_intent(query, intents)
             if result:
-                logger.info(f"result: {result}")
+                logger.info(f"classified intent: {result}")
                 return result
             else:
+                logger.info(f"classified intent: general_question")
                 return "general_question"
         except Exception as e:
-            print(f"Error interpreting user intent: {str(e)}")
+            logger.error(f"Error interpreting user intent: {str(e)}")
+            logger.info(f"classified intent: general_question")
             return "general_question"
