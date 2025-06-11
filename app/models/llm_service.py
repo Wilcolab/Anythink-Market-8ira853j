@@ -121,7 +121,6 @@ class LLMService:
         ]
 
         try:
-            print(f"user query:")
             query = self.sanitize_user_input(query)
             print(f"Interpreting user intent for query: {query}")
             result = self.classify_intent(query, intents)
