@@ -103,7 +103,7 @@ class LLMService:
             print(f"Error classifying intent: {str(e)}")
             return None
 
-    def sanitize_user_input(user_input):
+    def sanitize_user_input(self, user_input):
         """Cleanse user input to prevent injection attacks."""
         pattern = r'(?i)(select|update|delete|insert|drop|alter)'
         sanitized = re.sub(pattern, "", user_input)
@@ -122,7 +122,9 @@ class LLMService:
 
         try:
             query = self.sanitize_user_input(query)
+            print(f"Interpreting user intent for query: {query}")
             result = self.classify_intent(query, intents)
+            print(f"Interpreted intent: {result}")
             if result:
                 return result
             else:
