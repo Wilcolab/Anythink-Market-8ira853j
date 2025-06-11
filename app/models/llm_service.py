@@ -75,7 +75,7 @@ class LLMService:
             return error_response
 
     def classify_intent(self, query, candidate_labels):
-        """Classify the intent of the user query using Azure OpenAI"""
+        """Classify the intent of the user query using Azure OpenAI """
         try:
             prompt = f"Classify the following query into one of these categories: {', '.join(candidate_labels)}\n\nQuery: {query}\n\nCategory:"
 
