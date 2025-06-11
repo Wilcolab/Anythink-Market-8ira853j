@@ -123,9 +123,7 @@ class LLMService:
         try:
             logger.info(f"user query: {query}")
             query = self.sanitize_user_input(query)
-            print(f"Interpreting user intent for query: {query}")
             result = self.classify_intent(query, intents)
-            print(f"Interpreted intent: {result}")
             if result:
                 logger.info(f"result: {result}")
                 return result
