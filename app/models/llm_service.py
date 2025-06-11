@@ -127,6 +127,7 @@ class LLMService:
             result = self.classify_intent(query, intents)
             print(f"Interpreted intent: {result}")
             if result:
+                logger.info(f"result: {query}")
                 return result
             else:
                 return "general_question"
