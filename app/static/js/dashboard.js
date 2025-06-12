@@ -1,27 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Check for authentication token immediately
-  const token = localStorage.getItem("accessToken");
-  
-  // If no token, redirect to login page immediately
-  if (!token) {
-    window.location.href = "/login";
-    return;
-  }
-
   const queryForm = document.getElementById("query-form");
   const responseContent = document.getElementById("response-content");
   const logoutBtn = document.getElementById("logout-btn");
   const userName = document.getElementById("user-name");
 
-  // Since we have a token, fetch user info
-  fetchUserInfo(token);
+  const token = localStorage.getItem("accessToken");
+
+  if (token) {
+    fetchUserInfo(token);
+  } else {
+    if (userName) userName.textContent = "Guest";
+    if (logoutBtn) {
+      logoutBtn.textContent = "Login";
+      logoutBtn.setAttribute("href", "/login");
+    }
+  }
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function (e) {
       e.preventDefault();
-      // Since we're on the dashboard, we know we have a token
-      localStorage.removeItem("accessToken");
-      window.location.href = "/";
+      if (token) {
+        localStorage.removeItem("accessToken");
+        window.location.href = "/";
+      } else {
+        window.location.href = "/login";
+      }
     });
   }
 
@@ -41,17 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         if (response.status === 401) {
           localStorage.removeItem("accessToken");
-          window.location.href = "/login";
-          return;
+          if (userName) userName.textContent = "Guest";
+          if (logoutBtn) logoutBtn.textContent = "Login";
         }
-        if (userName) userName.textContent = "Guest";
-        if (logoutBtn) logoutBtn.textContent = "Login";
       }
     } catch (error) {
       console.error("Error fetching user info:", error);
-      // On error, redirect to login to be safe
-      localStorage.removeItem("accessToken");
-      window.location.href = "/login";
+      if (userName) userName.textContent = "Guest";
+      if (logoutBtn) logoutBtn.textContent = "Login";
     }
   }
 
@@ -105,8 +105,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
           if (response.status === 401 && token) {
             localStorage.removeItem("accessToken");
-            window.location.href = "/login";
-            return;
+            if (userName) userName.textContent = "Guest";
+            if (logoutBtn) logoutBtn.textContent = "Login";
           }
         }
       } catch (error) {
