@@ -1,0 +1,8 @@
+{
+  "name": "MongoDB Development Container",
+
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "forwardPorts": [27017],
+  "postCreateCommand": ".devcontainer/setup.sh",
+  "remoteUser": "vscode"
+}
