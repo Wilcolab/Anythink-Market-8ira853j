@@ -1,50 +1,82 @@
-# SecureInfo Concierge
+# Go Quiz API
 
-SecureInfo Concierge is an educational platform simulating a sophisticated financial assistant application. It integrates LLM capabilities with database retrievals, designed to teach secure data handling and interactions.
+A quiz API built with Go for the **Mastering GitHub Copilot Agent Mode for Go Backend Developers** quest.
 
-## Features
+## 🚀 Getting Started
 
-- FastAPI backend with RESTful services
-- Azure OpenAI integration for intelligent responses
-- SQLite database for storing financial data
-- JWT-based authentication for secure endpoints
-- Minimalist web interface for user interactions
-- Dockerized environment for easy deployment
+This repository is intentionally minimal - use GitHub Copilot Agent Mode to build the complete application!
 
-## Quick start
+### Quick Start
 
-The application runs in a Docker container:
+1. **Open in Codespace** or clone locally
+2. **Open GitHub Copilot Chat** in VS Code
+3. **Switch to Agent Mode** from the dropdown
+4. **Start developing**:
 
-1. Start the application with Docker Compose:
+   ```bash
+   # The environment auto-starts with:
+   # ✅ Go 1.21 development container
+   # ✅ PostgreSQL database
+   # ✅ Wilco agent for quest tracking
+   # ✅ Hot reload with Air
 
+   # Start coding with hot reload
+   go-run
    ```
-   docker compose up
-   ```
 
-2. Access the application in your web browser on port 8000
+### Architecture
 
-3. If you want to login, use the following default credentials:
-   - Username: johndoe
-   - Password: secret
+This starter uses a multi-container devcontainer setup:
 
-## Project Structure
+- **Go Dev Container**: Official Go 1.21 image with full development tools
+- **PostgreSQL**: Database service for your quiz API
+- **Wilco Agent**: Quest tracking and guidance (sidecar container)
 
-- `app/`: Main application directory
-  - `api/`: API routes and endpoints
-  - `auth/`: Authentication related code
-  - `database/`: Database connection and queries
-  - `models/`: LLM service implementation
-  - `static/`: Static assets (CSS, JavaScript)
-  - `templates/`: HTML templates
-- `data/`: Directory for storing the SQLite database
-- `Dockerfile`: Instructions for building the Docker image
-- `docker-compose.yml`: Docker Compose configuration
-- `requirements.txt`: Python dependencies
+### Sample Application
 
-## Main Components
+The starter includes a minimal Go API:
 
-- **API Endpoint**: The `app/api/secure-query` endpoint processes all financial queries and returns AI-generated responses
-- **LLM Service**: The `app/models/llm_service.py` manages OpenAI interactions and query interpretation
-- **Dashboard**: The main interface at `app/templates/dashboard.html` for submitting queries and viewing responses
-- **Login Page**: The authentication interface at `app/templates/index.html` for user access management
+- **GET /** - Simple "Hello" endpoint
+- **Database connection** - Ready to connect to PostgreSQL
+- **Hot reload** - Automatic restart on code changes
 
+### Development Commands
+
+Available aliases:
+
+- `go-run` - Start with hot reload (Air)
+- `go-build` - Build the application
+- `go-test` - Run tests
+- `go-mod` - Manage Go modules
+
+**Ready to start?** Open Copilot Chat, enable Agent Mode, and begin building! 🚀
+
+- **Wilco Agent**: Quest progress tracking
+
+### Sample Application
+
+The starter includes a minimal Go HTTP server:
+
+- **GET /** - Simple welcome message
+- **Database connection** - Ready to use with PostgreSQL
+
+### Development Commands
+
+Use these helpful aliases:
+
+- `go-run` - Start with hot reload (Air)
+- `go-build` - Build the application
+- `go-test` - Run tests
+- `go-mod` - Manage Go modules
+
+### Database Connection
+
+PostgreSQL is pre-configured and ready:
+
+- Host: `postgres`
+- Port: `5432`
+- Database: `quiz_db`
+- User: `quiz_user`
+- Password: `quiz_password`
+
+**Ready to start?** Open Copilot Chat, enable Agent Mode, and begin building! 🚀

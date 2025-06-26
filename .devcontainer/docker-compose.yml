@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  go-dev:
+    image: mcr.microsoft.com/devcontainers/go:1.21
+    container_name: go-quiz-dev
+    volumes:
+      - ../..:/workspace:cached
+      - go-modules:/go/pkg/mod
+    working_dir: /workspace
+    ports:
+      - "8080:8080"
+    depends_on:
+      - wilco-agent
+      - postgres
+    command: sleep infinity
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=quiz_user
+      - DB_PASSWORD=quiz_password
+      - DB_NAME=quiz_db
+
+  wilco-agent:
+    image: public.ecr.aws/v0a2l7y2/wilco/anythink-devcontainer:latest
+    container_name: wilco-agent
+    ports:
+      - "3009:3009"
+    volumes:
+      - ../..:/workspace:cached
+    working_dir: /workspace
+    command: bash -c "cd /wilco-agent && node agent.js"
+    environment:
+      - ENGINE_BASE_URL=${ENGINE_BASE_URL}
+      - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
+      - CODESPACE_NAME=${CODESPACE_NAME}
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: quiz-api-postgres
+    environment:
+      POSTGRES_USER: quiz_user
+      POSTGRES_PASSWORD: quiz_password
+      POSTGRES_DB: quiz_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quiz_user -d quiz_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  go-modules:
