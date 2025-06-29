@@ -41,6 +41,11 @@ sudo apt-get install -y postgresql postgresql-contrib
 # Start PostgreSQL service
 sudo service postgresql start
 
+# Create a default database user and database for development
+sudo -u postgres psql -c "CREATE USER app_user WITH PASSWORD 'app_password';"
+sudo -u postgres psql -c "CREATE DATABASE app_db OWNER app_user;"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE app_db TO app_user;"
+
 # Configure Codespace ports (if in Codespaces)
 if [ "$CODESPACE_NAME" ]; then
     gh codespace ports visibility 8080:public --codespace $CODESPACE_NAME 2>/dev/null || true

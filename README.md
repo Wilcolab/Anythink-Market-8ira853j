@@ -40,13 +40,26 @@ The starter includes a minimal HTTP server (`main.go`):
 
 ### Setting Up Your Database
 
-PostgreSQL is installed and running. Create your database setup:
+PostgreSQL is installed and running with a default development setup:
+
+**Default Database Credentials:**
+- **Host**: `localhost`
+- **Port**: `5432`
+- **Database**: `app_db`
+- **User**: `app_user`
+- **Password**: `app_password`
 
 ```bash
-# Connect to PostgreSQL
-sudo -u postgres psql
+# Connect to PostgreSQL with default credentials
+psql -h localhost -U app_user -d app_db
 
-# Create your database and user
+# Or connect as postgres superuser to create additional databases
+sudo -u postgres psql
+```
+
+**For production or custom setup:**
+```sql
+-- Create your own user and database
 CREATE USER myapp_user WITH PASSWORD 'your_password';
 CREATE DATABASE myapp_db OWNER myapp_user;
 GRANT ALL PRIVILEGES ON DATABASE myapp_db TO myapp_user;
@@ -54,15 +67,20 @@ GRANT ALL PRIVILEGES ON DATABASE myapp_db TO myapp_user;
 
 ### Environment Setup
 
-Create your own environment variables as needed:
+The default database connection is already configured in `main.go`. For custom setups, create your environment variables:
 
 ```bash
-# Example .env or environment setup
+# Example for custom database setup
 export POSTGRES_HOST=localhost
 export POSTGRES_PORT=5432
 export POSTGRES_DB=your_db_name
 export POSTGRES_USER=your_user
 export POSTGRES_PASSWORD=your_password
+```
+
+**Default connection string:**
+```
+host=localhost port=5432 user=app_user password=app_password dbname=app_db sslmode=disable
 ```
 
 **Ready to build?** 
