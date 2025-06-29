@@ -23,7 +23,7 @@ func main() {
 }
 
 func connectDB() *sql.DB {
-	connStr := "host=localhost port=5432 user=app_user password=app_password dbname=app_db sslmode=disable"
+	connStr := "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {

@@ -1,37 +1,37 @@
 {
-  "name": "Go Development Container",
-  "image": "mcr.microsoft.com/devcontainers/go:1-1.24-bookworm",
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/itsmechlark/features/postgresql:1": {}
-  },
-  "forwardPorts": [8080, 5432],
-  "portsAttributes": {
-    "8080": {
-      "label": "Go API Server",
-      "elevateIfNeeded": true,
-      "requireLocalPort": true,
-      "onAutoForward": "silent"
-    },
-    "5432": {
-      "label": "PostgreSQL Database",
-      "elevateIfNeeded": true,
-      "requireLocalPort": false,
-      "onAutoForward": "silent"
-    }
-  },
-  "postCreateCommand": "bash .devcontainer/setup.sh",
-  "remoteUser": "vscode",
-  "containerUser": "vscode",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "golang.go", 
-        "GitHub.copilot", 
-        "GitHub.copilot-chat",
-        "ms-vscode.vscode-json",
-        "ckolkman.vscode-postgres"
-      ]
-    }
-  }
+	"name": "Go & PostgreSQL",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+	},
+	"forwardPorts": [8080, 5432],
+	"portsAttributes": {
+		"8080": {
+			"label": "Go API Server",
+			"elevateIfNeeded": true,
+			"requireLocalPort": true,
+			"onAutoForward": "silent"
+		},
+		"5432": {
+			"label": "PostgreSQL Database",
+			"elevateIfNeeded": true,
+			"requireLocalPort": false,
+			"onAutoForward": "silent"
+		}
+	},
+	"postCreateCommand": "bash .devcontainer/setup.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"golang.go",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"ms-vscode.vscode-json",
+				"ckolkman.vscode-postgres"
+			]
+		}
+	},
+	"remoteUser": "vscode"
 }

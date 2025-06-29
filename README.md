@@ -45,25 +45,13 @@ PostgreSQL is installed and running with a default development setup:
 **Default Database Credentials:**
 - **Host**: `localhost`
 - **Port**: `5432`
-- **Database**: `app_db`
-- **User**: `app_user`
-- **Password**: `app_password`
+- **Database**: `postgres`
+- **User**: `postgres`
+- **Password**: `postgres`
 
 ```bash
 # Connect to PostgreSQL with default credentials
-psql -h localhost -U app_user -d app_db
-
-# Or connect as postgres superuser to create additional databases
-sudo -u postgres psql
-```
-
-**For production or custom setup:**
-```sql
--- Create your own user and database
-CREATE USER myapp_user WITH PASSWORD 'your_password';
-CREATE DATABASE myapp_db OWNER myapp_user;
-GRANT ALL PRIVILEGES ON DATABASE myapp_db TO myapp_user;
-```
+psql -h localhost -U postgres -d postgres
 
 ### Environment Setup
 
@@ -80,7 +68,7 @@ export POSTGRES_PASSWORD=your_password
 
 **Default connection string:**
 ```
-host=localhost port=5432 user=app_user password=app_password dbname=app_db sslmode=disable
+host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable
 ```
 
 **Ready to build?** 

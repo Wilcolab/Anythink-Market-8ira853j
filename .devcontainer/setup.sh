@@ -33,14 +33,14 @@ go install github.com/air-verse/air@latest
 echo "📦 Downloading Go dependencies..."
 go mod tidy
 
-# Configure PostgreSQL (installed via devcontainer feature)
-echo "🐘 Configuring PostgreSQL database and user..."
+# Wait for PostgreSQL to be ready
+echo "🐘 Waiting for PostgreSQL to be ready..."
+until pg_isready -h localhost -p 5432 -U postgres; do
+    echo "Waiting for PostgreSQL..."
+    sleep 2
+done
 
-# Create database and user using postgres superuser
-sudo -u postgres createdb app_db 2>/dev/null || echo "Database app_db may already exist"
-sudo -u postgres psql -c "CREATE USER app_user WITH PASSWORD 'app_password';" 2>/dev/null || echo "User app_user may already exist"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE app_db TO app_user;" 2>/dev/null || true
-
+echo "✅ PostgreSQL is ready!"
 
 # Configure Codespace ports (if in Codespaces)
 if [ "$CODESPACE_NAME" ]; then
