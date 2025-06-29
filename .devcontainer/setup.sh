@@ -33,18 +33,14 @@ go install github.com/air-verse/air@latest
 echo "📦 Downloading Go dependencies..."
 go mod tidy
 
-# Install and configure PostgreSQL
-echo "🐘 Installing and configuring PostgreSQL..."
-sudo apt-get update -qq
-sudo apt-get install -y postgresql postgresql-contrib
+# Configure PostgreSQL (installed via devcontainer feature)
+echo "🐘 Configuring PostgreSQL database and user..."
 
-# Start PostgreSQL service
-sudo service postgresql start
+# Create database and user using postgres superuser
+sudo -u postgres createdb app_db 2>/dev/null || echo "Database app_db may already exist"
+sudo -u postgres psql -c "CREATE USER app_user WITH PASSWORD 'app_password';" 2>/dev/null || echo "User app_user may already exist"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE app_db TO app_user;" 2>/dev/null || true
 
-# Create a default database user and database for development
-sudo -u postgres psql -c "CREATE USER app_user WITH PASSWORD 'app_password';"
-sudo -u postgres psql -c "CREATE DATABASE app_db OWNER app_user;"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE app_db TO app_user;"
 
 # Configure Codespace ports (if in Codespaces)
 if [ "$CODESPACE_NAME" ]; then

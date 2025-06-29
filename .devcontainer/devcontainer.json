@@ -2,7 +2,8 @@
   "name": "Go Development Container",
   "image": "mcr.microsoft.com/devcontainers/go:1-1.24-bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/itsmechlark/features/postgresql:1": {}
   },
   "forwardPorts": [8080, 5432],
   "portsAttributes": {
@@ -20,6 +21,8 @@
     }
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
   "customizations": {
     "vscode": {
       "extensions": [
