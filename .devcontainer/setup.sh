@@ -33,15 +33,6 @@ go install github.com/air-verse/air@latest
 echo "📦 Downloading Go dependencies..."
 go mod tidy
 
-# Wait for PostgreSQL to be ready
-echo "🐘 Waiting for PostgreSQL to be ready..."
-until pg_isready -h localhost -p 5432 -U postgres; do
-    echo "Waiting for PostgreSQL..."
-    sleep 2
-done
-
-echo "✅ PostgreSQL is ready!"
-
 # Configure Codespace ports (if in Codespaces)
 if [ "$CODESPACE_NAME" ]; then
     gh codespace ports visibility 8080:public --codespace $CODESPACE_NAME 2>/dev/null || true
