@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/go:1-1.24-bookworm
+    build:
+      context: ../..
+      dockerfile: .devcontainer/Dockerfile
     volumes:
       - ../..:/workspaces:cached
     command: sleep infinity
