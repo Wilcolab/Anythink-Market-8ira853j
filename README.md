@@ -1,82 +1,69 @@
-# Go Quiz API
+# Go API Starter
 
-A quiz API built with Go for the **Mastering GitHub Copilot Agent Mode for Go Backend Developers** quest.
+A minimal Go development environment with PostgreSQL for building APIs and web applications.
 
 ## 🚀 Getting Started
 
-This repository is intentionally minimal - use GitHub Copilot Agent Mode to build the complete application!
+This repository provides a clean foundation - perfect for starting any Go backend project!
 
 ### Quick Start
 
 1. **Open in Codespace** or clone locally
-2. **Open GitHub Copilot Chat** in VS Code
-3. **Switch to Agent Mode** from the dropdown
-4. **Start developing**:
+2. **Start developing** 
 
    ```bash
-   # The environment auto-starts with:
-   # ✅ Go 1.21 development container
-   # ✅ PostgreSQL database
-   # ✅ Wilco agent for quest tracking
+   # The environment provides:
+   # ✅ Go 1.21+ development container
+   # ✅ PostgreSQL database server
    # ✅ Hot reload with Air
+   # ✅ VS Code optimized setup
 
-   # Start coding with hot reload
-   go-run
+   # Start your application with hot reload
+   air
    ```
 
-### Architecture
+### What's Included
 
-This starter uses a multi-container devcontainer setup:
+This starter provides the essentials:
 
-- **Go Dev Container**: Official Go 1.21 image with full development tools
-- **PostgreSQL**: Database service for your quiz API
-- **Wilco Agent**: Quest tracking and guidance (sidecar container)
-
-### Sample Application
-
-The starter includes a minimal Go API:
-
-- **GET /** - Simple "Hello" endpoint
-- **Database connection** - Ready to connect to PostgreSQL
-- **Hot reload** - Automatic restart on code changes
-
-### Development Commands
-
-Available aliases:
-
-- `go-run` - Start with hot reload (Air)
-- `go-build` - Build the application
-- `go-test` - Run tests
-- `go-mod` - Manage Go modules
-
-**Ready to start?** Open Copilot Chat, enable Agent Mode, and begin building! 🚀
-
-- **Wilco Agent**: Quest progress tracking
+- **Go Development Environment**: Latest Go with development tools
+- **PostgreSQL**: Database server ready for your schema
+- **Hot Reload**: Automatic restart on code changes with Air
+- **VS Code Integration**: Optimized extensions and settings
 
 ### Sample Application
 
-The starter includes a minimal Go HTTP server:
+The starter includes a minimal HTTP server (`main.go`):
 
-- **GET /** - Simple welcome message
-- **Database connection** - Ready to use with PostgreSQL
+- **GET /** - Simple welcome endpoint
+- **Ready for expansion** - Add your routes, middleware, and logic
 
-### Development Commands
+### Setting Up Your Database
 
-Use these helpful aliases:
+PostgreSQL is installed and running. Create your database setup:
 
-- `go-run` - Start with hot reload (Air)
-- `go-build` - Build the application
-- `go-test` - Run tests
-- `go-mod` - Manage Go modules
+```bash
+# Connect to PostgreSQL
+sudo -u postgres psql
 
-### Database Connection
+# Create your database and user
+CREATE USER myapp_user WITH PASSWORD 'your_password';
+CREATE DATABASE myapp_db OWNER myapp_user;
+GRANT ALL PRIVILEGES ON DATABASE myapp_db TO myapp_user;
+```
 
-PostgreSQL is pre-configured and ready:
+### Environment Setup
 
-- Host: `postgres`
-- Port: `5432`
-- Database: `quiz_db`
-- User: `quiz_user`
-- Password: `quiz_password`
+Create your own environment variables as needed:
 
-**Ready to start?** Open Copilot Chat, enable Agent Mode, and begin building! 🚀
+```bash
+# Example .env or environment setup
+export POSTGRES_HOST=localhost
+export POSTGRES_PORT=5432
+export POSTGRES_DB=your_db_name
+export POSTGRES_USER=your_user
+export POSTGRES_PASSWORD=your_password
+```
+
+**Ready to build?** 
+Start coding your Go application! 🚀

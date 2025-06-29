@@ -15,7 +15,7 @@ func main() {
 	defer db.Close()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, Go Quiz API! 🐹")
+		fmt.Fprintf(w, "Hello, Go API! 🐹")
 	})
 
 	fmt.Println("🚀 Server starting on port 8080...")
@@ -23,17 +23,17 @@ func main() {
 }
 
 func connectDB() *sql.DB {
-	connStr := "host=postgres port=5432 user=quiz_user password=quiz_password dbname=quiz_db sslmode=disable"
-	
+	connStr := "host=postgres port=5432 user=app_user password=app_password dbname=app_db sslmode=disable"
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
-	
+
 	if err = db.Ping(); err != nil {
 		log.Fatal("Failed to ping database:", err)
 	}
-	
+
 	fmt.Println("✅ Connected to database")
 	return db
 }
