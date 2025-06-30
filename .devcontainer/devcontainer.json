@@ -3,8 +3,10 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	
 	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {}
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/trywilco/anythink-market-docker-images/wilco-agent:latest": {}
 	},
 	"forwardPorts": [8080, 5432],
 	"portsAttributes": {
