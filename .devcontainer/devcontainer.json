@@ -1,6 +1,14 @@
 {
   "name": "Python playground",
   "image": "mcr.microsoft.com/devcontainers/python:0-3.11-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/trywilco/anythink-market-docker-images/wilco-agent:latest": {}
+  },
+  "containerEnv": {
+    "CODESPACE_NAME": "${localEnv:CODESPACE_NAME}",
+    "GITHUB_REPOSITORY": "${localEnv:GITHUB_REPOSITORY}"
+  },
   "customizations": {
     "codespaces": {
       "openFiles": []
