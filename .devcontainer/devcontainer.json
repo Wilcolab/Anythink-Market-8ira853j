@@ -12,6 +12,13 @@
   "forwardPorts": [
     3009
   ],
+  "portsAttributes": {
+    "3009": {
+      "label": "Wilco Agent",
+      "protocol": "http",
+      "visibility": "public"
+    }
+  },
   "customizations": {
     "codespaces": {
       "openFiles": []
