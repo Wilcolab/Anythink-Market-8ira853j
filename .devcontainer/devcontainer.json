@@ -9,6 +9,9 @@
     "CODESPACE_NAME": "${localEnv:CODESPACE_NAME}",
     "GITHUB_REPOSITORY": "${localEnv:GITHUB_REPOSITORY}"
   },
+  "forwardPorts": [
+    3009
+  ],
   "customizations": {
     "codespaces": {
       "openFiles": []
