@@ -1,28 +1,39 @@
 {
-  "name": "Python playground",
-  "image": "mcr.microsoft.com/devcontainers/python:0-3.11-bullseye",
+  "name": "Go & PostgreSQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/trywilco/anythink-market-docker-images/wilco-agent:latest": {}
+    "ghcr.io/trywilco/anythink-market-docker-images/wilco-agent:1.0.18": {}
   },
-  "containerEnv": {
-    "CODESPACE_NAME": "${localEnv:CODESPACE_NAME}",
-    "GITHUB_REPOSITORY": "${localEnv:GITHUB_REPOSITORY}"
-  },
-  "customizations": {
-    "codespaces": {
-      "openFiles": []
+  "forwardPorts": [8080, 5432],
+  "portsAttributes": {
+    "8080": {
+      "label": "Go API Server",
+      "elevateIfNeeded": true,
+      "requireLocalPort": true,
+      "onAutoForward": "silent"
     },
-    "vscode": {
-      "settings": {
-        "extensions.ignoreRecommendations": true,
-        "workbench.startupEditor": "none",
-        "workbench.welcomePage.walkthroughs.openOnInstall": false,
-        "workbench.welcomePage.experimental.videoTutorials": "off",
-        "github.codespaces.defaultExtensions": []
-      },
-      "extensions": ["ms-toolsai.jupyter", "ms-python.python"]
+    "5432": {
+      "label": "PostgreSQL Database",
+      "elevateIfNeeded": true,
+      "requireLocalPort": false,
+      "onAutoForward": "silent"
     }
   },
-  "postStartCommand": "bash -c .devcontainer/setup.sh"
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-vscode.vscode-json",
+        "ckolkman.vscode-postgres"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
 }

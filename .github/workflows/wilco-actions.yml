@@ -27,10 +27,8 @@ jobs:
       - name: Check out project
         uses: actions/checkout@v2
 
-      - name: Use Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9.13"
+      - name: Use Go
+        uses: actions/setup-go@v5
 
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
@@ -46,3 +44,8 @@ jobs:
         uses: trywilco/actions@main
         with:
           engine: ${{ secrets.WILCO_ENGINE_URL }}
+
+      - name: Print server logs on failure
+        if: ${{ failure() }}
+        run: |
+          cat /tmp/output.log
