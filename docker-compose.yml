@@ -1,57 +1,22 @@
+version: "3.8"
+
 services:
-  anythink-backend-node:
-    image: public.ecr.aws/v0a2l7y2/wilco/anythink-backend-node:latest
-    container_name: anythink-backend-node
-    command: sh -c "cd backend && /wait-for-it.sh mongodb-node:27017 -q -t 60 && yarn dev"
-
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - MONGODB_URI=mongodb://mongodb-node:27017/anythink-market
-      - GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN=${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}
-    working_dir: /usr/src
-    volumes:
-      - ./:/usr/src/
-      - /usr/src/backend/node_modules
+  app:
+    build: .
     ports:
-      - "3000:3000"
-    depends_on:
-      - "mongodb-node"
-
-  anythink-frontend-react:
-    image: public.ecr.aws/v0a2l7y2/wilco/anythink-frontend-react:latest
-    container_name: anythink-frontend-react
-    command: sh -c "cd frontend && /wait-for-it.sh anythink-backend-node:3000 -t 120 --strict -- curl --head -X GET --retry 30 --retry-connrefused --retry-delay 1 anythink-backend-node:3000/api/ping && yarn start"
-    environment:
-      - NODE_ENV=development
-      - PORT=3001
-      - REACT_APP_BACKEND_URL=${CODESPACE_BACKEND_URL:-http://localhost:3000}
-      - WDS_SOCKET_PORT=${CODESPACE_WDS_SOCKET_PORT:-3001}
-    working_dir: /usr/src
+      - "8000:8000"
     volumes:
-      - ./:/usr/src/
-      - /usr/src/frontend/node_modules
-    ports:
-      - "3001:3001"
-    depends_on:
-      - "anythink-backend-node"
-
-  mongodb-node:
-    container_name: mongodb-node
-    restart: always
-    image: mongo
-    logging:
-      driver: none
-    volumes:
-      - ~/mongo/data:/data/db
-    ports:
-      - '27017:27017'
-
-  anythink-ack:
-    image: public.ecr.aws/v0a2l7y2/wilco/anythink-ack:latest
-    container_name: anythink-ack
+      - ./:/app
+      - /app/data
     environment:
-      - GITHUB_TOKEN=$GITHUB_TOKEN
-      - CODESPACE_NAME=$CODESPACE_NAME
-    depends_on:
-      - "anythink-frontend-react" 
+      - PORT=8000
+      - DATABASE_PATH=/app/data/financial_data.db
+      - JWT_SECRET_KEY=09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - ENGINE_WILCO_AI_URL=${ENGINE_WILCO_AI_URL}
+
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
