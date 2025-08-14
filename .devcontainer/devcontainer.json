@@ -1,14 +1,20 @@
 {
-    "name": "Secure Info Concierge",
-    "image": "mcr.microsoft.com/devcontainers/python:3.9",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-python.python",
-                "ms-python.vscode-pylance"
-            ]
-        }
+  "name": "Python playground",
+  "image": "mcr.microsoft.com/devcontainers/python:0-3.11-bullseye",
+  "customizations": {
+    "codespaces": {
+      "openFiles": []
     },
-    "forwardPorts": [8000],
-    "postCreateCommand": "bash .devcontainer/setup.sh"
-} 
+    "vscode": {
+      "settings": {
+        "extensions.ignoreRecommendations": true,
+        "workbench.startupEditor": "none",
+        "workbench.welcomePage.walkthroughs.openOnInstall": false,
+        "workbench.welcomePage.experimental.videoTutorials": "off",
+        "github.codespaces.defaultExtensions": []
+      },
+      "extensions": ["ms-toolsai.jupyter", "ms-python.python"]
+    }
+  },
+  "postStartCommand": "bash -c .devcontainer/setup.sh"
+}
