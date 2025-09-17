@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import RouterList from './components/RouterList';
 
 function App() {
   return (
@@ -10,17 +11,7 @@ function App() {
         </div>
       </header>
       <main className="App-main">
-        <div className="container">
-          <div className="placeholder-container">
-            <div className="placeholder-icon">🚀</div>
-            <h2 className="placeholder-title">Coming Soon</h2>
-            <div className="construction-line"></div>
-            <p className="placeholder-text">
-              We're working on something exciting! The DriveNets Dashboard is currently under development.
-              Stay tuned for a powerful network management interface.
-            </p>
-          </div>
-        </div>
+        <RouterList />
       </main>
     </div>
   );
