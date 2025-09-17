@@ -1,0 +1,26 @@
+{
+  "name": "Wilco",
+  "image": "public.ecr.aws/v0a2l7y2/wilco/anythink-devcontainer:latest",
+  "forwardPorts": [3000, 3001, 3009],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend",
+      "elevateIfNeeded": true,
+      "requireLocalPort": true,
+      "onAutoForward": "silent"
+    },
+    "3001": {
+      "label": "Backend",
+      "elevateIfNeeded": true,
+      "requireLocalPort": true,
+      "onAutoForward": "silent"
+    },
+    "3009": {
+      "label": "Wilco Agent",
+      "elevateIfNeeded": true,
+      "requireLocalPort": true,
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh"
+}
