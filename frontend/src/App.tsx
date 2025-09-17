@@ -17,8 +17,14 @@ function App() {
             <div className="construction-line"></div>
             <p className="placeholder-text">
               We're working on something exciting! The DriveNets Dashboard is currently under development.
-              Stay tuned for a powerful network management interface.
+              Stay tuned for a powerful network management interface
             </p>
+            Routes:
+            <ul className="routes-list">
+              <li>/dashboard - Main dashboard view</li>
+              <li>/devices - List of network devices</li>
+              <li>/settings - User settings and preferences</li>
+            </ul>
           </div>
         </div>
       </main>
