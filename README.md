@@ -1,18 +1,52 @@
-# Empty starter Python Playground
+# SecureInfo Concierge
 
-This is a Python development environment for **Wilco quests** - an interactive platform that provides hands-on coding challenges to help developers improve their skills.
+SecureInfo Concierge is an educational platform simulating a sophisticated financial assistant application. It integrates LLM capabilities with database retrievals, designed to teach secure data handling and interactions.
 
 ## Features
 
-- Python runtime
-- Jupyter Notebook support
-- Automatic Wilco quest integration
-- Ready-to-use development environment
+- FastAPI backend with RESTful services
+- Azure OpenAI integration for intelligent responses
+- SQLite database for storing financial data
+- JWT-based authentication for secure endpoints
+- Minimalist web interface for user interactions
 
-Install additional packages as needed: `pip install package_name`
+## Quick Start
 
-## Known Issues
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-**Jupyter Notebook with Codespace 1.104**: If you're using Jupyter notebook with Codespace version 1.104, you might need to manually install version 2025.7 of the Jupyter extension. For more details and troubleshooting steps, see: https://github.com/microsoft/vscode-jupyter/issues/16973
+2. Run the application (recommended for development):
+   ```bash
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app
+   ```
+   This will restart the server automatically when you change code in the `app` directory.
 
-Happy coding! 🚀
+3. Access the application in your web browser on port 8000
+
+4. If you want to login, use the following default credentials:
+   - Username: johndoe
+   - Password: secret
+
+## Project Structure
+
+- `app/`: Main application directory
+  - `api/`: API routes and endpoints
+  - `auth/`: Authentication related code
+  - `database/`: Database connection and queries
+  - `models/`: LLM service implementation
+  - `static/`: Static assets (CSS, JavaScript)
+  - `templates/`: HTML templates
+- `data/`: Directory for storing the SQLite database
+- `Dockerfile`: Instructions for building the Docker image
+- `docker-compose.yml`: Docker Compose configuration
+- `requirements.txt`: Python dependencies
+
+## Main Components
+
+- **API Endpoint**: The `app/api/secure-query` endpoint processes all financial queries and returns AI-generated responses
+- **LLM Service**: The `app/models/llm_service.py` manages OpenAI interactions and query interpretation
+- **Dashboard**: The main interface at `app/templates/dashboard.html` for submitting queries and viewing responses
+- **Login Page**: The authentication interface at `app/templates/index.html` for user access management
+
