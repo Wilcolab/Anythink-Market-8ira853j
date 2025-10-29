@@ -18,7 +18,10 @@ jobs:
         node-version: '18'
         
     - name: Install dependencies
-      run: npm install
-      
-    - name: Run tests
-      run: npm test
+      run: npm ci
+
+    - name: Run ESLint
+      run: npx eslint .
+
+    - name: Run tests with coverage
+      run: npm test -- --coverage --coverageThreshold.global.statements=80
