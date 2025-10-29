@@ -5,6 +5,19 @@ on:
     branches: [ main ]
 
 jobs:
+  label:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Label PR by directory
+      uses: ./.github/actions/label-pr-by-directory
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
   build:
     runs-on: ubuntu-latest
     

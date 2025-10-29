@@ -1,0 +1,21 @@
+name: 'Label PR by Directory'
+description: 'Automatically labels pull requests based on the directories that contain changed files'
+author: 'GitHub Copilot'
+
+inputs:
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+    default: ${{ github.token }}
+  label-prefix:
+    description: 'Prefix to add to directory labels (optional)'
+    required: false
+    default: ''
+
+runs:
+  using: 'node20'
+  main: 'index.js'
+
+branding:
+  icon: 'tag'
+  color: 'blue'

@@ -1,0 +1,21 @@
+{
+  "name": "label-pr-by-directory",
+  "version": "1.0.0",
+  "description": "GitHub Action to automatically label PRs based on directory changes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "github-action",
+    "pull-request",
+    "labeling",
+    "automation"
+  ],
+  "author": "GitHub Copilot",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0"
+  }
+}
