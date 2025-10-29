@@ -5,7 +5,9 @@
     "main": "src/index.js",
     "scripts": {
         "test": "jest",
-        "start": "node src/index.js"
+        "start": "node src/index.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix"
     },
     "keywords": [
         "github-actions",
@@ -15,6 +17,7 @@
     "author": "Wilco Quest",
     "license": "MIT",
     "devDependencies": {
+        "eslint": "^8.57.0",
         "jest": "^29.7.0"
     }
 }
