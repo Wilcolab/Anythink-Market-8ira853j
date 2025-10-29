@@ -1,0 +1,20 @@
+{
+    "name": "ci-cd-demo-project",
+    "version": "1.0.0",
+    "description": "A demo Node.js project for learning GitHub Actions and CI/CD",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "jest",
+        "start": "node src/index.js"
+    },
+    "keywords": [
+        "github-actions",
+        "ci-cd",
+        "nodejs"
+    ],
+    "author": "Wilco Quest",
+    "license": "MIT",
+    "devDependencies": {
+        "jest": "^29.7.0"
+    }
+}
