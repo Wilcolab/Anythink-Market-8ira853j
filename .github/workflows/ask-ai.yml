@@ -6,7 +6,7 @@ on:
 permissions:
   actions: read
   contents: read
-  id-token: write
+  models: read
 
 jobs:
   ask-ai:
