@@ -13,9 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: ai-response
-        uses: actions/ai-inference@v2
+        uses: actions/ai-inference@v1.2.8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          endpoint: https://models.github.ai/orgs/Wilcolab/inference
           prompt: |
             Give me a witty programming zinger suitable for a developer audience.
       - name: Display AI Response
