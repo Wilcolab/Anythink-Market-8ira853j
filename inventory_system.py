@@ -6,7 +6,7 @@ This system manages products, orders, and inventory for an online store.
 
 from datetime import datetime
 import json
-from typing import TypedDict
+from typing import TypedDict, TypeVar, Generic
 class OrderItemData(TypedDict):
     product_id: str
     quantity: int
@@ -33,7 +33,7 @@ class Product:
         self.price = self.price * (1 - percentage / 100)
         return self.price
     
-    def to_dict(self):
+    def to_dict(self) -> dict[str, str | float | int]:
         return {
             "product_id": self.product_id,
             "name": self.name,
@@ -42,6 +42,7 @@ class Product:
             "stock_quantity": self.stock_quantity,
             "created_at": self.created_at.isoformat()
         }
+
 
 
 class OrderItem:
@@ -56,6 +57,7 @@ class OrderItem:
 
     def get_total_price(self) -> float:
         return self.quantity * self.unit_price
+
 
 
 class Customer:
@@ -79,6 +81,7 @@ class Customer:
         if self.address:
             contact["address"] = self.address
         return contact
+
 
 
 class Order:
@@ -108,15 +111,16 @@ class Order:
         self.status = new_status
 
 
+
 class InventoryManager:
     products: dict[str, Product]
     orders: dict[str, Order]
     customers: dict[str, Customer]
 
     def __init__(self) -> None:
-        self.products = {}
-        self.orders = {}
-        self.customers = {}
+        self.products: dict[str, Product] = {}
+        self.orders: dict[str, Order] = {}
+        self.customers: dict[str, Customer] = {}
 
     def add_product(self, product: Product) -> Product:
         if product.product_id in self.products:
@@ -198,6 +202,13 @@ class InventoryManager:
         }
 
 
+
+T = TypeVar('T')
+
+class Box(Generic[T]):
+    def __init__(self, item: T):
+        self.item = item
+
 class SalesAnalytics:
     inventory: InventoryManager
 
@@ -259,10 +270,10 @@ class SalesAnalytics:
 
 
 if __name__ == "__main__":
-    inventory = InventoryManager()
-    analytics = SalesAnalytics(inventory)
+    inventory: InventoryManager = InventoryManager()
+    analytics: SalesAnalytics = SalesAnalytics(inventory)
     
-    products = [
+    products: list[Product] = [
         Product("LAPTOP001", "Gaming Laptop", 1299.99, "Electronics", 15),
         Product("MOUSE001", "Wireless Mouse", 29.99, "Electronics", 50),
         Product("BOOK001", "Python Programming", 49.99, "Books", 25)
@@ -271,7 +282,7 @@ if __name__ == "__main__":
     for product in products:
         inventory.add_product(product)
     
-    customers = [
+    customers: list[Customer] = [
         Customer("CUST001", "Alice Johnson", "alice@example.com", "+1234567890"),
         Customer("CUST002", "Bob Smith", "bob@example.com")
     ]
@@ -279,18 +290,18 @@ if __name__ == "__main__":
     for customer in customers:
         inventory.add_customer(customer)
     
-    order1 = inventory.create_order("CUST001", [
+    order1: Order = inventory.create_order("CUST001", [
         {"product_id": "LAPTOP001", "quantity": 1},
         {"product_id": "MOUSE001", "quantity": 2}
     ])
     
     order1.update_status("confirmed")
     
-    report = inventory.generate_inventory_report()
+    report: dict[str, int | float | list[str]] = inventory.generate_inventory_report()
     print("Inventory Report:", json.dumps(report, indent=2))
     
-    top_products = analytics.get_top_selling_products(5)
+    top_products: list[dict[str, str | int]] = analytics.get_top_selling_products(5)
     print("Top Selling Products:", json.dumps(top_products, indent=2))
     
-    customer_stats = analytics.get_customer_analytics("CUST001")
+    customer_stats: dict[str, str | int | float] | None = analytics.get_customer_analytics("CUST001")
     print("Customer Analytics:", json.dumps(customer_stats, indent=2))
