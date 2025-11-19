@@ -8,7 +8,7 @@ import json
 
 
 class Product:
-    def __init__(self, product_id, name, price, category, stock_quantity):
+    def __init__(self, product_id: str, name: str, price: float, category: str, stock_quantity: int) -> None:
         self.product_id = product_id
         self.name = name
         self.price = price
@@ -16,13 +16,13 @@ class Product:
         self.stock_quantity = stock_quantity
         self.created_at = datetime.now()
     
-    def update_stock(self, quantity):
+    def update_stock(self, quantity: int) -> int:
         if self.stock_quantity + quantity < 0:
             raise ValueError("Insufficient stock")
         self.stock_quantity += quantity
         return self.stock_quantity
     
-    def apply_discount(self, percentage):
+    def apply_discount(self, percentage: float) -> float:
         if percentage < 0 or percentage > 100:
             raise ValueError("Invalid discount percentage")
         self.price = self.price * (1 - percentage / 100)
