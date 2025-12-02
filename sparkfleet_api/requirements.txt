@@ -1,0 +1,9 @@
+# Project dependencies
+# TODO: Add actual dependencies as implementation progresses
+whisper # For transcription
+flask # For API
+requests # For integrations
+slack_sdk # For Slack integration
+PyGithub # For GitHub integration
+python-dotenv # For environment variables
+# Add calendar integration library as needed
