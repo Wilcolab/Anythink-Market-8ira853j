@@ -4,6 +4,8 @@ Performance monitoring and optimization module
 Manages performance metrics and optimization strategies.
 """
 
+from typing import Any
+
 
 class PerformanceManager:
     """
@@ -48,7 +50,7 @@ class PerformanceManager:
         """
         raise NotImplementedError("Metrics retrieval not yet implemented")
     
-    def cache_result(self, key: str, value: any, ttl: int = 3600) -> None:
+    def cache_result(self, key: str, value: Any, ttl: int = 3600) -> None:
         """
         Cache computation result for performance.
         
@@ -61,7 +63,7 @@ class PerformanceManager:
         """
         raise NotImplementedError("Result caching not yet implemented")
     
-    def get_cached_result(self, key: str) -> any:
+    def get_cached_result(self, key: str) -> Any:
         """
         Retrieve cached result.
         

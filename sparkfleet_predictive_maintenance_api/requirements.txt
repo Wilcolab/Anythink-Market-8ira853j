@@ -1,6 +1,0 @@
-# SparkFleet Predictive Maintenance API dependencies
-# Reference spec.md for required packages and integrations
-
-fastapi
-uvicorn
-# TODO: Add packages for transcription, summarization, integrations, etc.
