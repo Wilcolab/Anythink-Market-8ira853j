@@ -11,7 +11,7 @@ import logging
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
-from typing import Dict
+from typing import Dict, Tuple, Optional
 
 from .models import ProcessMeetingRequest, ProcessMeetingResponse, Transcript, Summary
 from .transcription import MeetingProcessor
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 # In-memory storage for demo purposes
 # In production, this would use a proper database
-meeting_storage: Dict[str, tuple[Transcript, Summary]] = {}
+meeting_storage: Dict[str, Tuple[Transcript, Optional[Summary]]] = {}
 
 
 @asynccontextmanager

@@ -66,8 +66,9 @@ class Transcriber:
             )
         
         # Get file size for duration estimation (rough approximation)
+        ESTIMATED_SECONDS_PER_MB = 60  # Rough estimate: 1MB ~ 1 minute of audio
         file_size_mb = file_path.stat().st_size / (1024 * 1024)
-        estimated_duration = int(file_size_mb * 60)  # Rough estimate: 1MB ~ 1 minute
+        estimated_duration = int(file_size_mb * ESTIMATED_SECONDS_PER_MB)
         
         logger.info(f"Transcribing audio file: {audio_file_path} (estimated {estimated_duration}s)")
         

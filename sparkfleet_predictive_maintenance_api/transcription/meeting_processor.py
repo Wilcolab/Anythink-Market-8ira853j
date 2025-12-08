@@ -6,7 +6,7 @@ Coordinates the transcription and summarization workflow for meetings.
 
 import logging
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Tuple
 from ..models import (
     Transcript, 
     Summary, 
@@ -51,7 +51,7 @@ class MeetingProcessor:
         audio_file_path: str,
         metadata: MeetingMetadata,
         auto_summarize: bool = True
-    ) -> tuple[Transcript, Optional[Summary]]:
+    ) -> Tuple[Transcript, Optional[Summary]]:
         """
         Process a meeting recording end-to-end.
         
