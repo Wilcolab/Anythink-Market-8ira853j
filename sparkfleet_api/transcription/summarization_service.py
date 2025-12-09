@@ -31,8 +31,21 @@ class SummarizationService:
         Returns:
             Summary object with key points, decisions, and action items
         """
-        if not transcription or not transcription.text:
-            logger.error("No transcription text provided")
+        # Validate transcription object
+        if not transcription:
+            logger.error("Transcription object is None")
+            return None
+        
+        if not hasattr(transcription, 'meeting_id') or not transcription.meeting_id:
+            logger.error("Transcription object missing required field: meeting_id")
+            return None
+        
+        if not hasattr(transcription, 'text') or not transcription.text:
+            logger.error(f"No transcription text provided for meeting {transcription.meeting_id}")
+            return None
+        
+        if not isinstance(transcription.text, str) or not transcription.text.strip():
+            logger.error(f"Invalid or empty transcription text for meeting {transcription.meeting_id}")
             return None
             
         try:

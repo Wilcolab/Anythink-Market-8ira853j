@@ -38,6 +38,19 @@ class MeetingProcessor:
         Returns:
             Tuple of (Transcription, Summary) if successful, (None, None) if failed
         """
+        # Validate meeting object
+        if not meeting:
+            logger.error("Meeting object is None")
+            return None, None
+        
+        if not hasattr(meeting, 'id') or not meeting.id:
+            logger.error("Meeting object missing required field: id")
+            return None, None
+        
+        if not hasattr(meeting, 'status'):
+            logger.error(f"Meeting {meeting.id} missing status field")
+            return None, None
+        
         if meeting.status != MeetingStatus.ENDED:
             logger.warning(f"Cannot process meeting {meeting.id} - status is {meeting.status}, not ENDED")
             return None, None

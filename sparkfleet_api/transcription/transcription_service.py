@@ -31,8 +31,21 @@ class TranscriptionService:
         Returns:
             Transcription object with the transcribed text
         """
-        if not meeting.audio_url:
+        # Validate meeting object
+        if not meeting:
+            logger.error("Meeting object is None")
+            return None
+        
+        if not hasattr(meeting, 'id') or not meeting.id:
+            logger.error("Meeting object missing required field: id")
+            return None
+        
+        if not hasattr(meeting, 'audio_url') or not meeting.audio_url:
             logger.error(f"No audio URL provided for meeting {meeting.id}")
+            return None
+        
+        if not hasattr(meeting, 'status'):
+            logger.error(f"Meeting {meeting.id} missing status field")
             return None
             
         if meeting.status not in [MeetingStatus.ENDED, MeetingStatus.TRANSCRIBING]:

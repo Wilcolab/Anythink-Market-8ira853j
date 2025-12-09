@@ -94,9 +94,24 @@ class WebhookHandler:
             Meeting object or None if parsing fails
         """
         try:
-            # Handle different webhook formats from different platforms
-            platform_str = webhook_data.get("platform", "zoom").lower()
+            # Validate webhook_data is a dictionary
+            if not isinstance(webhook_data, dict):
+                logger.error(f"Invalid webhook data type: expected dict, got {type(webhook_data).__name__}")
+                return None
             
+            # Validate required field: meeting_id
+            meeting_id = webhook_data.get("meeting_id")
+            if not meeting_id or not isinstance(meeting_id, str) or not meeting_id.strip():
+                logger.error("Missing or invalid required field: meeting_id")
+                return None
+            
+            # Handle different webhook formats from different platforms
+            platform_str = webhook_data.get("platform", "zoom")
+            if not isinstance(platform_str, str):
+                logger.warning(f"Invalid platform type: {type(platform_str).__name__}, defaulting to zoom")
+                platform_str = "zoom"
+            
+            platform_str = platform_str.lower()
             if platform_str == "zoom":
                 platform = MeetingPlatform.ZOOM
             elif platform_str in ["gmeet", "google-meet"]:
@@ -116,14 +131,26 @@ class WebhookHandler:
             else:
                 start_time = datetime.utcnow()
             
+            # Validate participants is a list
+            participants = webhook_data.get("participants", [])
+            if not isinstance(participants, list):
+                logger.warning(f"Invalid participants type: {type(participants).__name__}, using empty list")
+                participants = []
+            
+            # Validate metadata is a dict
+            metadata = webhook_data.get("metadata", {})
+            if not isinstance(metadata, dict):
+                logger.warning(f"Invalid metadata type: {type(metadata).__name__}, using empty dict")
+                metadata = {}
+            
             meeting = Meeting(
-                id=webhook_data.get("meeting_id", ""),
+                id=meeting_id.strip(),
                 title=webhook_data.get("topic", webhook_data.get("title", "Untitled Meeting")),
                 platform=platform,
                 start_time=start_time,
-                participants=webhook_data.get("participants", []),
+                participants=participants,
                 audio_url=webhook_data.get("recording_url", webhook_data.get("audio_url")),
-                metadata=webhook_data.get("metadata", {})
+                metadata=metadata
             )
             
             return meeting
