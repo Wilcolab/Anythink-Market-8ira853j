@@ -105,11 +105,22 @@ class WebhookHandler:
                 logger.warning(f"Unknown platform: {platform_str}, defaulting to ZOOM")
                 platform = MeetingPlatform.ZOOM
             
+            # Parse start_time safely
+            start_time_str = webhook_data.get("start_time")
+            if start_time_str:
+                try:
+                    start_time = datetime.fromisoformat(start_time_str)
+                except (ValueError, TypeError):
+                    logger.warning(f"Invalid start_time format: {start_time_str}, using current time")
+                    start_time = datetime.utcnow()
+            else:
+                start_time = datetime.utcnow()
+            
             meeting = Meeting(
                 id=webhook_data.get("meeting_id", ""),
                 title=webhook_data.get("topic", webhook_data.get("title", "Untitled Meeting")),
                 platform=platform,
-                start_time=datetime.fromisoformat(webhook_data["start_time"]) if "start_time" in webhook_data else datetime.utcnow(),
+                start_time=start_time,
                 participants=webhook_data.get("participants", []),
                 audio_url=webhook_data.get("recording_url", webhook_data.get("audio_url")),
                 metadata=webhook_data.get("metadata", {})

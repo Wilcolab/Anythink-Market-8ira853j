@@ -42,7 +42,7 @@ class Transcription:
     """Represents the transcription of a meeting."""
     meeting_id: str
     text: str
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=lambda: datetime.utcnow())
     language: str = "en"
     confidence_score: float = 0.0
     segments: List[dict] = field(default_factory=list)
@@ -65,5 +65,5 @@ class Summary:
     key_points: List[str] = field(default_factory=list)
     decisions: List[str] = field(default_factory=list)
     action_items: List[ActionItem] = field(default_factory=list)
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=lambda: datetime.utcnow())
     summary_text: Optional[str] = None

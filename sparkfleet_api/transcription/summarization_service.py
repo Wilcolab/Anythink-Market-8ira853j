@@ -1,7 +1,6 @@
 """Service for summarizing meeting transcriptions."""
 
 import logging
-import re
 from typing import List, Optional
 from datetime import datetime
 
@@ -142,7 +141,7 @@ class SummarizationService:
                 assignee = None
                 words = sentence.split()
                 for i, word in enumerate(words):
-                    if word[0].isupper() and len(word) > 2 and word.isalpha():
+                    if word and len(word) > 2 and word[0].isupper() and word.isalpha():
                         if i < len(words) - 1 and any(commit in words[i+1:i+3] for commit in ['will', 'would', 'committed']):
                             assignee = word
                             break
