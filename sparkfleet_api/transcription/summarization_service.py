@@ -161,8 +161,13 @@ class SummarizationService:
                 match = re.search(pattern, content.lower())
                 if match:
                     action_description = match.group(1).strip()
-                    # Capitalize first letter
-                    action_description = action_description[0].upper() + action_description[1:]
+                    # Capitalize first letter if not empty
+                    if len(action_description) > 0:
+                        action_description = action_description[0].upper() + action_description[1:]
+                    
+                    # Skip if description is too short or empty
+                    if len(action_description) < 3:
+                        continue
                     
                     # Calculate a simple confidence score
                     # Higher confidence for explicit commitments

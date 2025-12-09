@@ -25,9 +25,11 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# NOTE: Configure allow_origins with specific domains in production
+# Example: allow_origins=["https://sparkfleet.example.com"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=["*"],  # TODO: Restrict to specific domains in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
