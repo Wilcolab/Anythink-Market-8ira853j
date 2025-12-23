@@ -1,0 +1,63 @@
+[
+  {
+    "id": "faq-001",
+    "title": "How do I upgrade my subscription plan?",
+    "content": "To upgrade your AcmeCloud subscription, navigate to Settings > Billing > Change Plan. Select your desired plan tier (Starter, Professional, or Enterprise) and confirm the change. Upgrades take effect immediately, and you'll be charged a prorated amount for the remainder of your billing cycle. Note: Enterprise upgrades require contacting our sales team for custom pricing.",
+    "category": "billing"
+  },
+  {
+    "id": "faq-002",
+    "title": "What happens when I exceed my API call limit?",
+    "content": "When you exceed your monthly API call limit, additional calls are charged at overage rates: $0.002 per call for Starter plans, $0.001 for Professional, and custom rates for Enterprise. You'll receive email warnings at 80% and 95% usage. To avoid overages, consider upgrading your plan or enabling hard limits in Settings > API > Usage Limits.",
+    "category": "api"
+  },
+  {
+    "id": "faq-003",
+    "title": "How do I add team members to my account?",
+    "content": "Go to Settings > Team > Invite Members. Enter email addresses (comma-separated for multiple) and select a role: Viewer (read-only), Editor (can modify configurations), or Admin (full access including billing). Starter plans support up to 3 team members, Professional up to 25, and Enterprise unlimited. Invited users receive an email with a 7-day expiring link.",
+    "category": "account"
+  },
+  {
+    "id": "faq-004",
+    "title": "Why was my payment declined?",
+    "content": "Payment failures typically occur due to: expired card, insufficient funds, bank security blocks, or incorrect billing address. Update your payment method in Settings > Billing > Payment Methods. If issues persist, contact your bank to authorize AcmeCloud charges. Failed payments trigger a 7-day grace period before service suspension.",
+    "category": "billing"
+  },
+  {
+    "id": "faq-005",
+    "title": "How do I export my billing history?",
+    "content": "Access your billing history at Settings > Billing > Invoices. Click 'Export All' for a CSV download of all invoices, or select individual invoices for PDF download. Exports include invoice date, amount, payment method, and status. For accounting integrations, use our API endpoint GET /v1/billing/invoices with your API key.",
+    "category": "billing"
+  },
+  {
+    "id": "faq-006",
+    "title": "What is the difference between soft and hard API limits?",
+    "content": "Soft limits allow API calls to continue beyond your plan quota at overage rates. Hard limits stop all API calls once you reach your quota, returning HTTP 429 errors. Configure this at Settings > API > Usage Limits. We recommend soft limits for production environments to prevent service disruption, and hard limits for development/testing to control costs.",
+    "category": "api"
+  },
+  {
+    "id": "faq-007",
+    "title": "How do I cancel my subscription?",
+    "content": "To cancel, go to Settings > Billing > Cancel Subscription. You'll retain access until the end of your current billing period. Data is retained for 30 days post-cancellation, during which you can reactivate. After 30 days, all data is permanently deleted. Enterprise customers must contact their account manager for cancellation. Refunds are not provided for partial billing periods.",
+    "category": "billing"
+  },
+  {
+    "id": "faq-008",
+    "title": "How do webhooks work in AcmeCloud?",
+    "content": "Webhooks notify your system of events in real-time. Configure at Settings > Integrations > Webhooks. Supported events: subscription.created, subscription.updated, payment.succeeded, payment.failed, invoice.generated. Each webhook includes a signature header (X-AcmeCloud-Signature) for verification. Failed deliveries retry 3 times over 24 hours. Test webhooks using our sandbox environment.",
+    "category": "integrations"
+  },
+  {
+    "id": "faq-009",
+    "title": "What currencies does AcmeCloud support?",
+    "content": "AcmeCloud supports billing in USD, EUR, GBP, CAD, and AUD. Set your preferred currency during account creation or change it at Settings > Billing > Currency (note: currency changes apply to future invoices only). Multi-currency support for Enterprise allows different currencies per customer. Exchange rates are updated daily at 00:00 UTC.",
+    "category": "billing"
+  },
+  {
+    "id": "faq-010",
+    "title": "How do I enable two-factor authentication?",
+    "content": "Enable 2FA at Settings > Security > Two-Factor Authentication. We support authenticator apps (Google Authenticator, Authy) and SMS codes. Authenticator apps are recommended for higher security. Backup codes are provided during setup - store these securely. Admin users can enforce 2FA for all team members via Settings > Security > Team Policies.",
+    "category": "security"
+  }
+]
+
