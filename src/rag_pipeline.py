@@ -55,7 +55,18 @@ def build_prompt(question: str, context: str) -> str:
     - Include the context and question
     - Guide the LLM to be helpful and accurate
     """
-    raise NotImplementedError("Implement build_prompt function")
+    # Create a prompt instructing the LLM to answer based on context
+    prompt = (
+        "You are a helpful support assistant for AcmeCloud. "
+        "Answer the user's question using only the information provided in the context below. "
+        "If the answer is not in the context, say you don't know.\n\n"
+        "Context:\n"
+        f"{context}\n\n"
+        "Question: "
+        f"{question}\n"
+        "Answer:"
+    )
+    return prompt
 
 
 def answer_question(question: str) -> str:
@@ -73,4 +84,12 @@ def answer_question(question: str) -> str:
     if _documents is None or _embeddings is None:
         initialize()
     
-    raise NotImplementedError("Implement answer_question function")
+    # Retrieve relevant documents
+    retrieved_docs = retrieve(question, _documents, _embeddings)
+    # Build context string
+    context = build_context(retrieved_docs)
+    # Build prompt for LLM
+    prompt = build_prompt(question, context)
+    # Get answer from LLM
+    answer = generate_response(prompt, model=config.llm_model)
+    return answer
