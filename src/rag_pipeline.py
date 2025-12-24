@@ -25,25 +25,7 @@ def build_context(retrieved_docs: list[dict]) -> str:
     - Combine documents into a single context string
     - Keep within config.max_context_length if needed
     """
-    # Format each document as: 'Title\nContent\n---\n'
-    context_pieces = []
-    total_length = 0
-    max_len = config.max_context_length
-    for doc in retrieved_docs:
-        title = doc.get("title", "")
-        content = doc.get("content", "")
-        piece = f"{title}\n{content}\n---\n"
-        # Check if adding this piece would exceed max_context_length
-        if total_length + len(piece) > max_len:
-            # Truncate the piece if possible
-            allowed = max_len - total_length
-            if allowed > 0:
-                piece = piece[:allowed]
-                context_pieces.append(piece)
-            break
-        context_pieces.append(piece)
-        total_length += len(piece)
-    return "".join(context_pieces).strip()
+    raise NotImplementedError("Implement build_context function")
 
 
 def build_prompt(question: str, context: str) -> str:
