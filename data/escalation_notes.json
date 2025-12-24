@@ -1,0 +1,83 @@
+[
+  {
+    "id": "esc-001",
+    "title": "Customer charged twice for same subscription",
+    "scenario": "Customer reports seeing two identical charges on their credit card statement for the same billing period.",
+    "resolution": "This typically occurs when the customer clicks the payment button multiple times during a slow connection. Check the Payments table in admin panel for duplicate transaction IDs within a 5-minute window. If confirmed duplicate, initiate refund via Admin > Payments > Refund. The duplicate charge flag should auto-trigger but sometimes fails. Escalate to Finance if refund doesn't process within 48 hours.",
+    "internal_notes": "Known issue with payment processor timeout handling. Engineering ticket ACME-2341 tracks the fix. Workaround: advise customers to wait for confirmation screen before retrying.",
+    "priority": "high"
+  },
+  {
+    "id": "esc-002",
+    "title": "Pro-rated charges calculated incorrectly during mid-cycle upgrade",
+    "scenario": "Customer upgraded from Starter to Professional mid-billing cycle and claims they were overcharged for the prorated amount.",
+    "resolution": "Our proration uses daily rates calculated as (monthly price / days in month). Pull the upgrade timestamp from the Subscription Events log. Manually verify: (days remaining * daily rate of new plan) - (days remaining * daily rate of old plan). Common error: system sometimes uses 30-day month for calculation regardless of actual month length. If discrepancy confirmed, issue credit via Admin > Credits > Issue Manual Credit.",
+    "internal_notes": "February billing is especially prone to this issue. Always double-check calculations for Feb upgrades. Bug tracked in ACME-1892.",
+    "priority": "medium"
+  },
+  {
+    "id": "esc-003",
+    "title": "API rate limiting not resetting at midnight",
+    "scenario": "Customer on Professional plan reports their API limit counter didn't reset at midnight UTC as expected.",
+    "resolution": "First verify the customer's timezone setting in their account - some customers confuse local midnight with UTC. If truly a reset failure, check the Rate Limit Service health dashboard. Manual reset available via Admin > API > Reset Counter (requires Level 2 support access). Document the incident - if this occurs more than twice for same customer, escalate to Engineering.",
+    "internal_notes": "Rate limit service runs on a cron job that occasionally fails during high-load periods. The January 2024 incident affected ~200 customers. Permanent fix pending infrastructure upgrade Q3.",
+    "priority": "high"
+  },
+  {
+    "id": "esc-004",
+    "title": "Customer unable to add payment method - perpetual loading state",
+    "scenario": "Customer reports the Add Payment Method modal shows a spinner indefinitely without completing.",
+    "resolution": "This is usually a browser compatibility issue with our Stripe integration. Steps: (1) Have customer try incognito/private browsing mode, (2) Clear browser cache, (3) Try different browser (Chrome recommended), (4) Disable ad blockers which sometimes block Stripe scripts. If all fail, Support Level 2 can add payment method on behalf of customer via Admin > Billing > Add Card (requires verbal confirmation of card details - never written).",
+    "internal_notes": "Safari on iOS 16.x has known issues. Firefox with strict tracking protection also problematic. We're waiting on Stripe SDK update to fix these edge cases.",
+    "priority": "medium"
+  },
+  {
+    "id": "esc-005",
+    "title": "Webhook delivery failures causing integration issues",
+    "scenario": "Customer's integration stopped receiving webhooks, breaking their billing automation workflow.",
+    "resolution": "Check Webhook Logs in Admin > Integrations > Webhook History for the customer. Look for HTTP error codes: 4xx usually means customer endpoint issue (they need to fix), 5xx could be transient. If seeing consistent failures, test their endpoint with our webhook tester tool. Customers can also manually retry failed webhooks from their dashboard. If customer endpoint is working but we're not sending, escalate to Engineering with customer ID and timestamp range.",
+    "internal_notes": "Our webhook queue has a known bottleneck during peak billing periods (1st-3rd of month). If mass failures occur, check #webhook-alerts Slack channel before escalating.",
+    "priority": "medium"
+  },
+  {
+    "id": "esc-006",
+    "title": "Enterprise customer invoice not generating",
+    "scenario": "Enterprise customer with custom billing terms reports their monthly invoice wasn't generated.",
+    "resolution": "Enterprise invoices use a separate generation pipeline that requires manual approval for custom terms. Check Admin > Enterprise > Pending Invoices. If invoice is stuck in 'pending_approval' state, notify the Finance team via #enterprise-billing Slack channel. If invoice is completely missing, check if the customer's contract renewal date passed - sometimes contracts lapse silently and invoicing stops.",
+    "internal_notes": "Enterprise invoicing is manual by design for audit purposes, but this causes confusion. Product team has proposed automation in H2 roadmap. For now, Finance reviews every Enterprise invoice before sending.",
+    "priority": "high"
+  },
+  {
+    "id": "esc-007",
+    "title": "Team member permissions not applying correctly",
+    "scenario": "Customer reports that a team member with Editor role can access billing information, which should be Admin-only.",
+    "resolution": "This is a known UI bug where billing tab appears visible but actions fail. Verify by checking audit log - if the Editor user has any successful billing actions logged, this is a real permissions breach (escalate immediately to Security). Usually it's just the UI showing the tab incorrectly. Fix: have the Admin remove and re-add the affected team member. If persistent, clear the permissions cache via Admin > Team > Sync Permissions.",
+    "internal_notes": "Permissions caching was added for performance but introduced these edge cases. The cache syncs every 15 minutes. Manual sync forces immediate refresh.",
+    "priority": "high"
+  },
+  {
+    "id": "esc-008",
+    "title": "Customer locked out after enabling 2FA",
+    "scenario": "Customer enabled two-factor authentication but lost access to their authenticator app and backup codes.",
+    "resolution": "Identity verification required before 2FA reset. Process: (1) Verify account ownership via email confirmation to the account's primary email, (2) If email inaccessible, require government ID matching account name (use secure upload portal), (3) Once verified, Level 2 Support can disable 2FA via Admin > Security > Disable 2FA. Customer should immediately set up new 2FA and store backup codes securely.",
+    "internal_notes": "Never skip identity verification - this is a common social engineering vector. Document all verification steps in the ticket. Average resolution time is 2-4 hours due to verification requirements.",
+    "priority": "medium"
+  },
+  {
+    "id": "esc-009",
+    "title": "Data export taking over 24 hours",
+    "scenario": "Customer requested data export for compliance/GDPR and the export has been processing for over 24 hours.",
+    "resolution": "Large accounts (>1M records) legitimately take 12-48 hours. Check export queue status in Admin > Data > Export Jobs. If status is 'stuck' or 'failed', the job needs manual restart - escalate to Data Team via #data-ops. For GDPR requests specifically, we have a 30-day legal requirement so flag urgency if approaching deadline. Alternative: offer to export in chunks by date range which processes faster.",
+    "internal_notes": "Export worker has memory limits that large accounts sometimes exceed. We're provisioning additional capacity. Chunked exports are a reliable workaround in the meantime.",
+    "priority": "medium"
+  },
+  {
+    "id": "esc-010",
+    "title": "Annual subscription early cancellation refund request",
+    "scenario": "Customer on annual plan requests refund for unused months after deciding to cancel mid-year.",
+    "resolution": "Standard policy: annual plans are non-refundable and clearly stated in ToS. However, exceptions may be made for: (1) Service-level failures on our part, (2) Customer business closure with documentation, (3) Cases over $5000 remaining value. For exception requests, gather details and submit to Finance via the Refund Exception form in Admin. Never promise refund approval - only that the request will be reviewed. Typical review time is 5-7 business days.",
+    "internal_notes": "Refund exception approval rate is ~30%. Factors that help: long-time customers, legitimate hardship, and cases where we had service issues. Finance tracks these metrics so be accurate in documentation.",
+    "priority": "low"
+  }
+]
+

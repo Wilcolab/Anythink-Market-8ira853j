@@ -1,0 +1,73 @@
+[
+  {
+    "id": "eval-001",
+    "question": "How can a customer upgrade their subscription plan?",
+    "reference_answer": "Customers can upgrade by navigating to Settings > Billing > Change Plan, selecting their desired tier, and confirming. The upgrade takes effect immediately with prorated charges.",
+    "expected_sources": ["faq-001"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "eval-002",
+    "question": "What should I tell a customer who was charged twice for the same subscription?",
+    "reference_answer": "Check the Payments table for duplicate transactions within a 5-minute window. If confirmed, initiate a refund via Admin > Payments > Refund. This is a known issue with payment processor timeouts.",
+    "expected_sources": ["esc-001"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "eval-003",
+    "question": "A customer claims their prorated upgrade charge is wrong for a February upgrade. What should I check?",
+    "reference_answer": "The proration system sometimes uses 30-day months regardless of actual month length. February is especially prone to this issue. Verify the calculation manually using the upgrade timestamp and daily rates, then issue a credit if there's a discrepancy.",
+    "expected_sources": ["esc-002"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "eval-004",
+    "question": "What's the difference between soft and hard API limits?",
+    "reference_answer": "Soft limits allow calls to continue beyond quota at overage rates. Hard limits stop calls at quota, returning HTTP 429 errors. Soft limits are recommended for production, hard limits for development/testing cost control.",
+    "expected_sources": ["faq-006"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "eval-005",
+    "question": "How do I help a customer who lost their 2FA device and backup codes?",
+    "reference_answer": "Identity verification is required: confirm via primary email, or request government ID if email inaccessible. Once verified, Level 2 Support can disable 2FA via Admin > Security > Disable 2FA. Never skip verification as this is a common social engineering target.",
+    "expected_sources": ["esc-008"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "eval-006",
+    "question": "What currencies does AcmeCloud support for billing?",
+    "reference_answer": "AcmeCloud supports USD, EUR, GBP, CAD, and AUD. Currency can be set during account creation or changed in Settings > Billing > Currency for future invoices. Enterprise plans support multi-currency.",
+    "expected_sources": ["faq-009"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "eval-007",
+    "question": "A customer's API rate limit didn't reset at midnight. What's happening?",
+    "reference_answer": "First check if they're confusing local time with UTC. If it's a genuine reset failure, check the Rate Limit Service health dashboard. A manual reset is available via Admin > API > Reset Counter. The service runs on a cron job that occasionally fails during high-load periods.",
+    "expected_sources": ["esc-003"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "eval-008",
+    "question": "How long is customer data retained after subscription cancellation?",
+    "reference_answer": "Data is retained for 30 days post-cancellation, during which customers can reactivate. After 30 days, all data is permanently deleted.",
+    "expected_sources": ["faq-007"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "eval-009",
+    "question": "A customer on annual plan wants a refund for unused months after canceling early. What's the policy?",
+    "reference_answer": "Standard policy is that annual plans are non-refundable per ToS. Exceptions may be made for service failures, business closure with documentation, or cases over $5000 remaining value. Submit exception requests to Finance via the Refund Exception form. Never promise approval.",
+    "expected_sources": ["esc-010"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "eval-010",
+    "question": "What should I check if an Enterprise customer's invoice wasn't generated?",
+    "reference_answer": "Enterprise invoices use a separate pipeline requiring manual approval. Check Admin > Enterprise > Pending Invoices for stuck 'pending_approval' status. Also verify the contract hasn't lapsed. Notify Finance via #enterprise-billing Slack if needed.",
+    "expected_sources": ["esc-006"],
+    "difficulty": "hard"
+  }
+]
+
