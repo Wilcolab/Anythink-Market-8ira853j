@@ -13,7 +13,13 @@ def cosine_similarity(query_embedding: np.ndarray, doc_embeddings: np.ndarray) -
     - Compute dot product between normalized query and all documents
     - Return array of similarity scores
     """
-    raise NotImplementedError("Implement cosine_similarity function")
+    # Normalize query embedding
+    query_norm = query_embedding / (np.linalg.norm(query_embedding) + 1e-8)
+    # Normalize document embeddings
+    doc_norms = doc_embeddings / (np.linalg.norm(doc_embeddings, axis=1, keepdims=True) + 1e-8)
+    # Compute dot product (cosine similarity)
+    similarities = np.dot(doc_norms, query_norm)
+    return similarities
 
 
 def retrieve(
@@ -41,5 +47,12 @@ def retrieve(
     """
     if top_k is None:
         top_k = config.top_k
-    
-    raise NotImplementedError("Implement retrieve function")
+
+    # Embed the query
+    query_embedding = embed_texts([query])[0]  # shape: (embedding_dim,)
+    # Compute similarity scores
+    scores = cosine_similarity(query_embedding, doc_embeddings)
+    # Get indices of top_k scores
+    top_indices = np.argsort(scores)[-top_k:][::-1]
+    # Return the top_k most relevant documents
+    return [documents[i] for i in top_indices]
